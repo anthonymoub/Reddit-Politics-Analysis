@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Group 1 Big Data Project – nlp</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ml.html" rel="next">
+<link href="./eda.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./nlp.html">Natural Language Processing</a></li><li class="breadcrumb-item"><a href="./nlp.html">NLP</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Politics &amp; Finance in the Age of Big Reddit Data</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./business_goals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Business Goals</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Exploratory Data Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">EDA</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Natural Language Processing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./nlp.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">NLP</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Machine Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Conclusion</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./discussion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Discussion</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Code</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+ <span class="menu-text">Data Gathering</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/fred.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">fred.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/AskPoltics_Changemyview.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">AskPoltics_Changemyview.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/centrist_liberterian.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">centrist_liberterian.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/convervative_finance.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">convervative_finance.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/socialism_economics_liberal.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">socialism_economics_liberal.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+ <span class="menu-text">Preprocessing</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/data_cleaning.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">data_cleaning.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/basic_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">basic_eda.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/sentiment_askpolitics_changemyview.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment_askpolitics_changemyview.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/sentiment_centrist_libertarian.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment_centrist_libertarian.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/sentiment_conservative_finance.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment_conservative_finance.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/sentiment_socialism_Economics_Liberal.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment_socialism_Economics_Liberal.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/controversial_processing.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">controversial_processing.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+ <span class="menu-text">EDA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/eda/anthony_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">anthony_eda.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/eda/eric_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">eric_eda.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/eda/raunak_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">raunak_eda.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/eda/tegveer_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">tegveer_eda.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false">
+ <span class="menu-text">NLP</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/nlp/sentiment.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/nlp/tegveer_nlp_aws.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">tegveer_nlp_aws.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/nlp/tegveer_nlp_azure.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">tegveer_nlp_azure.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+ <span class="menu-text">ML</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/ml/controversial_processing.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">controversial_processing.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/ml/controversial_classification.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">controversial_classification.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/ml/score_regression_raunak.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">score_regression_raunak.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/ml/clustering_subreddits.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">clustering_subreddits.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#nlp" id="toc-nlp" class="nav-link active" data-scroll-target="#nlp">NLP</a>
+  <ul class="collapse">
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link" data-scroll-target="#executive-summary">Executive Summary</a></li>
+  <li><a href="#analysis-report" id="toc-analysis-report" class="nav-link" data-scroll-target="#analysis-report">Analysis Report</a>
+  <ul class="collapse">
+  <li><a href="#business-goal-8-basic-nlp-and-text-checks." id="toc-business-goal-8-basic-nlp-and-text-checks." class="nav-link" data-scroll-target="#business-goal-8-basic-nlp-and-text-checks.">Business Goal #8: Basic NLP and Text Checks.</a></li>
+  <li><a href="#business-goal-9-assess-the-mood-and-attitude-in-posts-and-comments-across-subreddits-in-relation-to-the-u.s.-gdp." id="toc-business-goal-9-assess-the-mood-and-attitude-in-posts-and-comments-across-subreddits-in-relation-to-the-u.s.-gdp." class="nav-link" data-scroll-target="#business-goal-9-assess-the-mood-and-attitude-in-posts-and-comments-across-subreddits-in-relation-to-the-u.s.-gdp.">Business Goal #9: Assess the Mood and Attitude in Posts and Comments across Subreddits in Relation to the U.S. GDP.</a></li>
+  <li><a href="#business-goal-10-determine-prevalent-subjects-or-themes-in-combined-political-and-economics-subreddits-submissions." id="toc-business-goal-10-determine-prevalent-subjects-or-themes-in-combined-political-and-economics-subreddits-submissions." class="nav-link" data-scroll-target="#business-goal-10-determine-prevalent-subjects-or-themes-in-combined-political-and-economics-subreddits-submissions.">Business Goal #10: Determine Prevalent Subjects or Themes in Combined Political and Economics Subreddits Submissions.</a></li>
+  </ul></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="nlp" class="level1">
+<h1>NLP</h1>
+<section id="executive-summary" class="level2">
+<h2 class="anchored" data-anchor-id="executive-summary">Executive Summary</h2>
+<p>The NLP section focuses on analyzing the trends in submission posts and comments of the nine subreddits gathered, seven related to politics and two related to economics. In these nine subreddits, we uncovered key insights about the overall text distributions and sentiments expressed by its users in both submissions and comments. The main focus, however, is on sentiment analysis, which was conducted using a pre-trained sentiment model from the <code>johnsnowlabs sparkNLP</code> library. With its help, we assigned an overall sentiment of positive, negative, or neutral to each submission and comment.</p>
+<p>The results of our analysis revealed that there is a decent amount of overlap in the top 100 words present in the politics and economics subreddits comments. We also found major dips in activity in economics subreddits comments, which could be attributed to U.S or global major events in December 2021. In terms of sentiment, we found that <code>r/Conservative</code>, <code>r/Libertarian</code>, and <code>r/centrist</code> contain higher positive sentiment in comments, while <code>r/Economics</code> and <code>r/Liberal</code> contain higher negative sentiment. In submissions, <code>r/AskPolitics</code> and <code>r/Conservative</code> contain higher negative sentiment, while <code>r/Economics</code> and <code>r/Liberal</code> contain higher positive sentiment. We also found that the majority of comments and submissions are positive, with a significant amount of negative sentiment. This suggests that while there is a prevailing positive discourse, a substantial amount of the conversation is polarized, with negative comments forming a notable part of the dialogue. The low percentage of neutral comments could indicate that participants in these discussions tend to take a clear stance rather than a neutral one.</p>
+<p>We also conducted sentiment analysis on the <code>r/Economics</code> subreddit using external data from the <a href="https://pypi.org/project/fred/"><code>fred</code> python package</a> The results revealed a significant spike in the frequency of “recession” mentions in the <code>r/Economics</code> subreddit, which aligns closely with key economic events. This suggests that the subreddit’s users are highly responsive to real-world economic indicators and news, and underscores the role of major economic announcements in shaping public discourse.</p>
+<p>Finally, LDA Topic Modeling was conducted separately on the submissions of the seven political subreddits and two economics subreddits and it illuminated distinct themes within political and economics subreddits. In politics, discussions ranged from exploring beliefs and perspectives, dissecting political parties and national contexts, to examining government policies and societal initiatives. These encompassed global affairs, societal issues, and ideological perspectives on political systems. In economics, topics spanned global economic and political interconnectedness, discussions on oil protests, housing markets, cryptocurrencies, Biden administration’s efforts in student loan accessibility, trade dynamics, and the fusion of technology and finance through fintech applications.</p>
+</section>
+<section id="analysis-report" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-report">Analysis Report</h2>
+<section id="business-goal-8-basic-nlp-and-text-checks." class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-8-basic-nlp-and-text-checks.">Business Goal #8: Basic NLP and Text Checks.</h3>
+<p>We created an NLP Pipeline built with <code>johnsnowlabs</code> and the <code>spark-nlp</code> package. The following functions from the package were utilized on both submissions, including the <code>selftext</code> and <code>title</code> columns, and comments, including the <code>body</code> column, datasets:</p>
+<ul>
+<li><p><code>DocumentAssembler()</code>: Transforms input data into Spark NLP annotated documents.</p></li>
+<li><p><code>Tokenizer()</code>: Splits the text into individual words, also known as tokens.</p></li>
+<li><p><code>Normalizer()</code>: Performs various text normalization techniques, such as converting text to lowercase, removing special characters, and replacing abbreviations with their full forms.</p></li>
+<li><p><code>NorvigSweetingModel.pretrained()</code>: Applies a spell checker based on the Norvig and Sweeting algorithm to correct spelling mistakes.</p></li>
+<li><p><code>StopWordsCleaner()</code>: Removes common stop words from the text, such as “the”, “and”, “a”, etc., which are generally not helpful in determining the sentiment of a text.</p></li>
+<li><p><code>LemmatizerModel.pretrained()</code>: Reduces each word to its base form (lemma), which can improve the consistency of analysis by grouping together related words.</p></li>
+<li><p><code>Finisher()</code>: Extracts the processed text from the Spark NLP document and formats it as a regular string for further analysis.</p></li>
+</ul>
+<section id="frequent-words" class="level4">
+<h4 class="anchored" data-anchor-id="frequent-words">Frequent Words</h4>
+<center>
+<figure class="figure">
+<table class="table">
+<thead>
+<tr class="header">
+<th>Rank</th>
+<th>Word</th>
+<th>Word Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>people</td>
+<td>71,173</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>cmv (Change My View)</td>
+<td>60,735</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Biden</td>
+<td>50,499</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Trump</td>
+<td>33,879</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>right</td>
+<td>27,886</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>state</td>
+<td>27,344</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>29</td>
+<td>government</td>
+<td>19,999</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>42</td>
+<td>democrat</td>
+<td>16,373</td>
+</tr>
+<tr class="odd">
+<td>43</td>
+<td>country</td>
+<td>15,758</td>
+</tr>
+<tr class="even">
+<td>44</td>
+<td>man</td>
+<td>15,494</td>
+</tr>
+<tr class="odd">
+<td>45</td>
+<td>republic</td>
+<td>15,333</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>53</td>
+<td>conservative</td>
+<td>13,856</td>
+</tr>
+<tr class="even">
+<td>54</td>
+<td>find</td>
+<td>13,637</td>
+</tr>
+<tr class="odd">
+<td>55</td>
+<td>law</td>
+<td>13,603</td>
+</tr>
+<tr class="even">
+<td>56</td>
+<td>party</td>
+<td>13,541</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>59</td>
+<td>police</td>
+<td>13,263</td>
+</tr>
+<tr class="odd">
+<td>60</td>
+<td>mean</td>
+<td>13,216</td>
+</tr>
+<tr class="even">
+<td>61</td>
+<td>election</td>
+<td>13,151</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>73</td>
+<td>America</td>
+<td>12,469</td>
+</tr>
+<tr class="odd">
+<td>74</td>
+<td>libertarian</td>
+<td>12,465</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>99</td>
+<td>gun</td>
+<td>10,698</td>
+</tr>
+<tr class="even">
+<td>100</td>
+<td>tax</td>
+<td>10,677</td>
+</tr>
+</tbody>
+</table>
+<figcaption class="figure-caption">
+Table 1: Select Top 100 Frequent Words in Politics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+<p>Table 1 above shows the top 100 most frequent words in the submissions of the seven political subreddits. We can see that users predominantly discuss a variety of political topics. The top ten most frequently used words suggest a focus on individuals (“people”), the Change My View (CMV) subreddit, and prominent political figures such as Joe Biden and Donald Trump. Other notable themes include discussions about political ideologies (“right,” “conservative,” “libertarian”), governmental entities (“government,” “state”), and political processes (“election”). Additionally, terms like “democrat,” “republic,” and “country” indicate discussions related to political parties and the broader national context. Finally, the presence of words like “police,” “gun,” and “tax” suggests discussions on law enforcement, firearms, and taxation policies. Overall, the word frequency analysis indicates a diverse range of political topics and perspectives within these subreddits, reflecting the complexity and breadth of political discourse on political subreddits.</p>
+<p><strong>Note:</strong> Tables for other subreddits are in the appendix.</p>
+</section>
+<section id="top-10-important-words-quantified-by-tf-idf" class="level4">
+<h4 class="anchored" data-anchor-id="top-10-important-words-quantified-by-tf-idf">Top 10 Important Words Quantified by TF-IDF</h4>
+<center>
+<figure class="figure">
+<table class="table">
+<thead>
+<tr class="header">
+<th>Rank</th>
+<th>Word</th>
+<th>TF-IDF Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>baathism</td>
+<td>99.91752355387538</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>sunscreen</td>
+<td>99.91752355387538</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>stormcloaks</td>
+<td>99.9059313812928</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>subjectivism</td>
+<td>99.9059313812928</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>breakdancing</td>
+<td>99.9059313812928</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>thalmor</td>
+<td>99.9059313812928</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>mdici</td>
+<td>99.9059313812928</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>neopaganism</td>
+<td>99.9059313812928</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>haganah</td>
+<td>99.9059313812928</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>akilensai</td>
+<td>99.9059313812928</td>
+</tr>
+</tbody>
+</table>
+<figcaption class="figure-caption">
+Table 2: Top 10 Important Words in Politics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+<p><strong>Note:</strong> Tables for other subreddits are in the appendix.</p>
+</section>
+<section id="distribution-of-text-length" class="level4">
+<h4 class="anchored" data-anchor-id="distribution-of-text-length">Distribution of Text Length</h4>
+<center>
+<figure class="figure">
+<img src="./text_length_pol_subs.png" alt="Histogram Politics Subs" style="margin-left: 10px;" class="figure-img">
+<figcaption class="figure-caption">
+Figure 1: Histogram of Text Length for Politics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+<center>
+<figure class="figure">
+<img src="./wordcount_over_time.png" alt="Wordcount Time" style="margin-right: 50px;" width="800" height="400" class="figure-img">
+<figcaption class="figure-caption">
+Figure 2: Line Chart of Number of Words Over Time in Economics and Politics Subreddits Submissions and Comments
+</figcaption>
+</figure>
+</center>
+<p>Figure 1 (and all histograms similar to it in the appendix) denote large outliers for submissions and comments in the subreddits (with Figure 1 focusing on Politics subreddits), and a majority of submissions and posts have text lengths between 0 to 500 words. In figure 2, however, we see a massive drop in average word count from 40 to almost 25 in the economics subreddits’ comments from December 2021 to March 2022. A number of major events took place in the U.S around those dates and could have been the cause of the drop in average word count. The events include the Supreme Court hearing arguments on the Texas abortion law and COVID-19 updates on the Omicron virus. Activity for political subreddits’ submissions and comments seem to be relatively stable, with a slight peak in submissions in May 2022.</p>
+</section>
+</section>
+<section id="business-goal-9-assess-the-mood-and-attitude-in-posts-and-comments-across-subreddits-in-relation-to-the-u.s.-gdp." class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-9-assess-the-mood-and-attitude-in-posts-and-comments-across-subreddits-in-relation-to-the-u.s.-gdp.">Business Goal #9: Assess the Mood and Attitude in Posts and Comments across Subreddits in Relation to the U.S. GDP.</h3>
+<center>
+<figure class="figure">
+
+<iframe src="plots/comms_sentiment_subreddit_table.html" width="100%" height="600">
+</iframe>
+<figcaption class="figure-caption">
+Table 3: Count of Sentiment Type by Politics and Economics Subreddits (Comments)
+</figcaption>
+</figure>
+</center>
+<p>Table 3 presents sentiment analysis data for various political subreddits. Notably, ‘Conservative’ and ‘Libertarian’ subreddits exhibit a higher proportion of positive comments, with 57.44% and 58.44%, respectively. In contrast, the ‘Economics’ subreddit shows a balance between positive and negative sentiments, with negative comments slightly edging out at 57.22%. The ‘Liberal’ subreddit has a relatively even distribution of positive and negative sentiments, but negative comments are more prevalent at 52.59%. ‘Centrist’ stands out with the highest percentage of positive comments at 60.16%. Each subreddit demonstrates a unique sentiment profile, which could reflect the general attitudes and discussions prevalent in these online communities.</p>
+<center>
+<figure class="figure">
+
+<iframe src="plots/comms_sentiment_table.html" width="700" height="600">
+</iframe>
+<figcaption class="figure-caption">
+Table 4: Total Count by Sentiment Type (Comments)
+</figcaption>
+</figure>
+</center>
+<p>Table 4 summarizes the overall sentiment of comments, showing that the majority (57.85%) are positive, while a significant portion (38.14%) are negative. Neutral comments constitute the smallest group at 4.02%. This distribution suggests that while there is a prevailing positive discourse, a substantial amount of the conversation is polarized, with negative comments forming a notable part of the dialogue. The low percentage of neutral comments could indicate that participants in these discussions tend to take a clear stance rather than a neutral one.</p>
+<center>
+<figure class="figure">
+
+<iframe src="plots/subs_sentiment_subreddit_table.html" width="100%" height="500px">
+</iframe>
+<figcaption class="figure-caption">
+Table 5: Count of Sentiment Type by Politics and Economics Subreddits (Submissions)
+</figcaption>
+</figure>
+</center>
+<p>Table 5 provides data on the sentiment of submissions across various political subreddits. In <code>r/AskPolitics</code>, the distribution is almost evenly split between positive and negative submissions, with negligible neutral content. <code>r/Conservative</code> submissions lean more towards the positive at 51.23%, but also have a substantial proportion of negative sentiment at 44.87%. The <code>r/Economics</code> subreddit is predominantly positive at 56.97%, with negative submissions also forming a significant part at 40.05%. ‘Liberal’ submissions are mostly positive at 54.37%. Overall, while positive submissions prevail across the subreddits, there is a notable presence of negative sentiment, reflecting the contentious nature of political discourse on these platforms.</p>
+<center>
+<figure class="figure">
+
+<iframe src="plots/subs_sentiment_table.html" width="700" height="300">
+</iframe>
+<figcaption class="figure-caption">
+Table 6: Total Count by Sentiment Type (Submissions)
+</figcaption>
+</figure>
+</center>
+<p>Table 6 shows the sentiment distribution of total submissions, where positive sentiments constitute the majority with 54.28%. Negative sentiments are also prominent, comprising 42.02% of submissions, which points to a significant level of divisiveness or critical discourse. Neutral sentiments are relatively rare, making up only 3.71% of the total, suggesting that most contributors have definitive opinions that are either positive or negative, rather than neutral. This distribution highlights a polarized environment where neutral or ambivalent voices are far less common compared to those expressing clear-cut positive or negative stances.</p>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/posts-r-centrist/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 3: Number of Posts By Sentiment Over Time in <code>r/centrist</code> Submissions
+</figcaption>
+</figure>
+</center>
+<p>Figure 3 above (and the similar ones in the appendix) showcases the relationship between U.S. Real GDP and the number of posts categorized by sentiment (positive, neutral, and negative) from various political subreddits over time. The line graph represents the trend in Real GDP, which seems to rise steadily in most charts before plateauing or contracting, indicating a period of economic downturn. Bar graphs display the sentiment of posts in the respective subreddits, with the volume of posts often showing fluctuations.</p>
+<p>From a cross-comparison among the subreddits, it seems that the trends in sentiment and GDP do not correspond uniformly across different political spectra. The sentiment analysis from these subreddits could potentially reflect the general mood or economic outlook of their members, with varying degrees of positive, neutral, and negative posts. Notably, there are points where an increase in negative sentiment coincides with a contraction in GDP, which could suggest a correlation between economic performance and public sentiment as expressed in these online communities. However, without a deeper statistical analysis, it cannot be conclusively stated that there is a causal relationship.</p>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/recession-gdp/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 4: Number of Submissions in the <code>r/Economics</code> subreddit with mentions of “recession” vs U.S Real GDP
+</figcaption>
+</figure>
+</center>
+<p>As discussed in the EDA section, we gathered external data from the <a href="https://pypi.org/project/fred/">fred python package</a>. The bar chart above depicts the frequency of “recession” mentions in the <code>r/Economics</code> subreddit reveals a significant pattern that aligns closely with key economic events. Initially, the mentions of “recession” were extremely low, indicating a period of less concern or focus on economic downturns among the subreddit’s discussions. This phase reflects a period of either economic stability or a lack of immediate economic threats that would trigger widespread discussions about a recession.</p>
+<p>However, a notable change occurs around the third quarter of 2022. During these months, the mentions of “recession” spiked dramatically. This increase in discussions around recession correlates strongly with a significant real-world economic event: the United States announcing that its Gross Domestic Product (GDP) contracted for two consecutive quarters. This is a classic technical indicator of a recession, which understandably would spark increased interest and concern in an economics-focused community.</p>
+<p>The timing of this spike in conversation suggests that the subreddit’s users are highly responsive to real-world economic indicators and news. It also underscores the role of major economic announcements in shaping public discourse. The heightened focus on the term “recession” during these months likely reflects a mix of concern, analysis, and speculation about the future of the economy, both in the U.S. and globally.</p>
+</section>
+<section id="business-goal-10-determine-prevalent-subjects-or-themes-in-combined-political-and-economics-subreddits-submissions." class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-10-determine-prevalent-subjects-or-themes-in-combined-political-and-economics-subreddits-submissions.">Business Goal #10: Determine Prevalent Subjects or Themes in Combined Political and Economics Subreddits Submissions.</h3>
+<p>The <code>Latent Dirichlet Allocation (LDA)</code> Model is a statistical method for uncovering hidden (latent) topics within a set of documents. It assumes that each document consists of a blend of a limited number of topics, and each topic is essentially a probability distribution across words. The model functions by portraying each document as a probability distribution over topics and each topic as a probability distribution over words. Through the examination of these distributions, LDA can pinpoint the most significant topics related to the documents in a collection, even if these topics are not explicitly expressed in the documents.</p>
+<p>In this section, we aim to determine the prevalent subjects or themes of the combined seven political subreddits and two economics subreddits submissions. We first employed the <code>LDA</code> model from the <code>pyspark.ml.clustering</code> class in Azure ML and then the <code>LdaModel</code> from <code>gensim.models.ldamodel</code> to conduct topic modeling on the submissions and comments of the nine subreddits. The <code>gensim</code> library was used to generate the interactive visualization, created with the <code>pyLDAvis</code> package, below for our topics as <code>pyspark</code> does not have a visualization tool for LDA models. However, both <code>pyspark</code> and <code>gensim</code> outputted similar topics and the topics generated with <code>gensim</code> are presented below.</p>
+<p><em>Also note that when creating the LDA model, we set the number of topics to 5</em>.</p>
+<section id="political-subreddits-submissions" class="level4">
+<h4 class="anchored" data-anchor-id="political-subreddits-submissions">Political Subreddits Submissions</h4>
+<center>
+<figure class="figure">
+<iframe src="https://tegveerg.georgetown.domains/big_data_pol_lda/pol_subs_lda.html" width="800px" height="900px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 5: Interactive Visualization of Topics in Politics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+<p>The table below summarizes Figure 5 shown above:</p>
+<center>
+<figure class="figure">
+<table class="table">
+<thead>
+<tr class="header">
+<th>Topic</th>
+<th>Topic Words</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>people, think, want, good, right, cmv (change my view), life, use, change, believe</td>
+<td>Exploring perspectives and beliefs in political discourse to understand and potentially alter their own opinions (similar to <a href="https://gu-dsan6000.github.io/fall-2023-reddit-project-team-01/nlp.html#basic-nlp-and-text-checks">Table 3</a> above)</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>widen (Biden), Trump, cmv (change my view), democrat, republican, conservative, vote, gun, party, bill</td>
+<td>Discussions related to political parties and the broader national context (similar to <a href="https://gu-dsan6000.github.io/fall-2023-reddit-project-team-01/nlp.html#basic-nlp-and-text-checks">Table 1</a> above)</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>state, government, work, school, free, child, money, social, public, give, allow</td>
+<td>Discussion on government policies and societal initiatives with a focus on financial support and accessibility</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>covid, white, house, police, election, vaccine, abortion, death, law, crime, russia, military, justice</td>
+<td>Discussions encompassing mournful local and global affairs as well as societal issues</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>libertarian, socialist, leftist, war, power, politics, history, story, ukraine, afghanistan, russian</td>
+<td>Ideological perspectives on political systems with with a focus on historical narratives and geopolitical events in war-torn regions</td>
+</tr>
+</tbody>
+</table>
+<figcaption class="figure-caption">
+Table 7: Summary of Topics in Politics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+</section>
+<section id="economics-subreddits-submissions" class="level4">
+<h4 class="anchored" data-anchor-id="economics-subreddits-submissions">Economics Subreddits Submissions</h4>
+<center>
+<figure class="figure">
+<iframe src="https://tegveerg.georgetown.domains/big_data_econ_lda/econ_subs_lda.html" width="800px" height="900px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 6: Interactive Visualization of Topics in Economics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+<p>The table below summarizes Figure 6 shown above:</p>
+<center>
+<figure class="figure">
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 46%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Topic</th>
+<th>Topic Words</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>stock, inflation, market, rate, change, economy, high, world, china, covid, ukraine, russia</td>
+<td>Discussions highlighting the interconnectedness of global economic and political events with financial markets</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>price, crypto, rise, tax, house, work, million, bitcoin, investor, job, uk, oil, gas</td>
+<td>Discussions related to oil protests in the UK, housing markets, and cryptocurrencies</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>new, year, buy, people, loan, credit, help, widen (Biden), claim, report, student</td>
+<td>Discussion on Biden administration’s efforts to expand student loan access and financial assistance for borrowers</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>make, money, trade, business, currency, weakness, strength, payment</td>
+<td>Discussions on trade and currency dynamics influencing global economic strength and business opportunities</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>fintechinshorts, fintechnews, finance, fund, debt, investment, bill, partner, risk, asset, app</td>
+<td>Discussing the convergence of technology and finance, while underscoring the collaborative and user-centric approach of fintech as well as risk management</td>
+</tr>
+</tbody>
+</table>
+<figcaption class="figure-caption">
+Table 8: Summary of Topics in Economics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+</section>
+</section>
+</section>
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
+<center>
+<figure class="figure">
+<table class="table">
+<thead>
+<tr class="header">
+<th>Rank</th>
+<th>Word</th>
+<th>Word Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>fintechinshorts</td>
+<td>7,003</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>bank</td>
+<td>3,810</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>market</td>
+<td>2,885</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>inflation</td>
+<td>2,784</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>stock</td>
+<td>2,537</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>rate</td>
+<td>16,373</td>
+</tr>
+<tr class="even">
+<td>18</td>
+<td>money</td>
+<td>2,121</td>
+</tr>
+<tr class="odd">
+<td>19</td>
+<td>man</td>
+<td>2,116</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td>get</td>
+<td>2,074</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>price</td>
+<td>1,958</td>
+</tr>
+<tr class="even">
+<td>22</td>
+<td>good</td>
+<td>1,943</td>
+</tr>
+<tr class="odd">
+<td>23</td>
+<td>economy</td>
+<td>1,937</td>
+</tr>
+<tr class="even">
+<td>24</td>
+<td>review</td>
+<td>1,850</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>finance</td>
+<td>1,790</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>30</td>
+<td>economic</td>
+<td>1,448</td>
+</tr>
+<tr class="even">
+<td>31</td>
+<td>crypto</td>
+<td>1,429</td>
+</tr>
+<tr class="odd">
+<td>32</td>
+<td>trade</td>
+<td>1,429</td>
+</tr>
+<tr class="even">
+<td>33</td>
+<td>world</td>
+<td>1,429</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>38</td>
+<td>covid</td>
+<td>1,310</td>
+</tr>
+<tr class="odd">
+<td>39</td>
+<td>buy</td>
+<td>1,301</td>
+</tr>
+<tr class="even">
+<td>40</td>
+<td>global</td>
+<td>1,298</td>
+</tr>
+<tr class="odd">
+<td>41</td>
+<td>weakness</td>
+<td>1,296</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>51</td>
+<td>rise</td>
+<td>1,234</td>
+</tr>
+<tr class="even">
+<td>52</td>
+<td>help</td>
+<td>1,225</td>
+</tr>
+<tr class="odd">
+<td>53</td>
+<td>pay</td>
+<td>1,225</td>
+</tr>
+<tr class="even">
+<td>54</td>
+<td>work</td>
+<td>1,203</td>
+</tr>
+<tr class="odd">
+<td>55</td>
+<td>time</td>
+<td>1,200</td>
+</tr>
+<tr class="even">
+<td>56</td>
+<td>fund</td>
+<td>1,124</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>96</td>
+<td>account</td>
+<td>854</td>
+</tr>
+<tr class="odd">
+<td>97</td>
+<td>growth</td>
+<td>854</td>
+</tr>
+<tr class="even">
+<td>98</td>
+<td>fall</td>
+<td>851</td>
+</tr>
+<tr class="odd">
+<td>99</td>
+<td>crisis</td>
+<td>846</td>
+</tr>
+<tr class="even">
+<td>100</td>
+<td>recession</td>
+<td>833</td>
+</tr>
+</tbody>
+</table>
+<figcaption class="figure-caption">
+Appendix 1: Select Top 100 Frequent Words in Economics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+
+<!-- Table 2 above shows the top 100 most frequent words in the submissions of the two economics related subreddits. Users in these communities primarily discuss topics related to finance, markets, and economic indicators, as expected. The most frequently used words include "fintechinshorts" reflecting discussions on financial technology, and terms such as "bank", "market", "inflation", and "stock." There are also discussions about broader economic issues, such as the economy itself, global dynamics ("world"), and the impact of events like COVID-19 on the economy. Additionally, words like "crypto", which bring us back to the "shitposts" discussed in the [EDA section](https://gu-dsan6000.github.io/fall-2023-reddit-project-team-01/eda.html#executive-summary) "trade", and "fund" suggest a focus on cryptocurrency, trading, and investment funds. Lastly, there does not seem to be an overlap of similar words to the politics subreddits submissions. -->
+<center>
+<figure class="figure">
+<table class="table">
+<thead>
+<tr class="header">
+<th>Rank</th>
+<th>Word</th>
+<th>Word Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>people</td>
+<td>3,916,872</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>like</td>
+<td>2,429,385</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>say</td>
+<td>2,388,813</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>get</td>
+<td>2,383,236</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>think</td>
+<td>2,212,302</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>28</td>
+<td>state</td>
+<td>938,986</td>
+</tr>
+<tr class="even">
+<td>29</td>
+<td>we</td>
+<td>927,029</td>
+</tr>
+<tr class="odd">
+<td>30</td>
+<td>year</td>
+<td>828,483</td>
+</tr>
+<tr class="even">
+<td>31</td>
+<td>government</td>
+<td>828,131</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>48</td>
+<td>Trump</td>
+<td>655,714</td>
+</tr>
+<tr class="odd">
+<td>49</td>
+<td>actually</td>
+<td>652,720</td>
+</tr>
+<tr class="even">
+<td>50</td>
+<td>look</td>
+<td>650,575</td>
+</tr>
+<tr class="odd">
+<td>51</td>
+<td>vote</td>
+<td>644,104</td>
+</tr>
+<tr class="even">
+<td>52</td>
+<td>country</td>
+<td>627,094</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>59</td>
+<td>pay</td>
+<td>583,674</td>
+</tr>
+<tr class="odd">
+<td>60</td>
+<td>post</td>
+<td>573,795</td>
+</tr>
+<tr class="even">
+<td>61</td>
+<td>law</td>
+<td>572,163</td>
+</tr>
+<tr class="odd">
+<td>62</td>
+<td>reason</td>
+<td>565,496</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>77</td>
+<td>child</td>
+<td>506,417</td>
+</tr>
+<tr class="even">
+<td>78</td>
+<td>money</td>
+<td>504,222</td>
+</tr>
+<tr class="odd">
+<td>79</td>
+<td>argument</td>
+<td>504,091</td>
+</tr>
+<tr class="even">
+<td>80</td>
+<td>live</td>
+<td>500,994</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>98</td>
+<td>yes</td>
+<td>433,362</td>
+</tr>
+<tr class="odd">
+<td>99</td>
+<td>wrong</td>
+<td>428,341</td>
+</tr>
+<tr class="even">
+<td>100</td>
+<td>keep</td>
+<td>427,201</td>
+</tr>
+</tbody>
+</table>
+<figcaption class="figure-caption">
+Appendix 2: Select Top 100 Frequent Words in Politics Subreddits Comments
+</figcaption>
+</figure>
+</center>
+
+<!-- Table 3 above shows the top 100 most frequent words in the comments of the seven political subreddits. The most frequently used word in comments is also "people," like it was in political subreddits submissions. Other notable words include "state". "government". "Trump", "country", "law", and "money,". Additionally, words like "vote", "election", and "democrat" suggest discussions about political processes and parties. There also seem to be comments that discuss legal issues, given the high presence of the words "law", "argument", and "case", which is not shown but is rank 92. -->
+<center>
+<figure class="figure">
+<table class="table">
+<thead>
+<tr class="header">
+<th>Rank</th>
+<th>Word</th>
+<th>Word Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>people</td>
+<td>274,244</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>make</td>
+<td>215,993</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>get</td>
+<td>209,560</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>go</td>
+<td>194,391</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>pay</td>
+<td>143,362</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>money</td>
+<td>141,992</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>work</td>
+<td>141,738</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>think</td>
+<td>138,345</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>say</td>
+<td>134,141</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>price</td>
+<td>128,054</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>tax</td>
+<td>127,177</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>inflation</td>
+<td>110,184</td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td>rate</td>
+<td>109,396</td>
+</tr>
+<tr class="even">
+<td>21</td>
+<td>time</td>
+<td>106,155</td>
+</tr>
+<tr class="odd">
+<td>22</td>
+<td>market</td>
+<td>103,920</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>even</td>
+<td>103,606</td>
+</tr>
+<tr class="odd">
+<td>24</td>
+<td>house</td>
+<td>103,563</td>
+</tr>
+<tr class="even">
+<td>25</td>
+<td>high</td>
+<td>99,101</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>37</td>
+<td>job</td>
+<td>81,568</td>
+</tr>
+<tr class="odd">
+<td>38</td>
+<td>buy</td>
+<td>80,449</td>
+</tr>
+<tr class="even">
+<td>39</td>
+<td>company</td>
+<td>79,214</td>
+</tr>
+<tr class="odd">
+<td>40</td>
+<td>way</td>
+<td>78,705</td>
+</tr>
+<tr class="even">
+<td>41</td>
+<td>increase</td>
+<td>78,237</td>
+</tr>
+<tr class="odd">
+<td>42</td>
+<td>government</td>
+<td>78,082</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>52</td>
+<td>country</td>
+<td>64,732</td>
+</tr>
+<tr class="even">
+<td>53</td>
+<td>interest</td>
+<td>64,663</td>
+</tr>
+<tr class="odd">
+<td>54</td>
+<td>lot</td>
+<td>64,473</td>
+</tr>
+<tr class="even">
+<td>55</td>
+<td>home</td>
+<td>64,098</td>
+</tr>
+<tr class="odd">
+<td>56</td>
+<td>economy</td>
+<td>64,068</td>
+</tr>
+<tr class="even">
+<td>57</td>
+<td>right</td>
+<td>63,889</td>
+</tr>
+<tr class="odd">
+<td>58</td>
+<td>many</td>
+<td>62,990</td>
+</tr>
+<tr class="even">
+<td>59</td>
+<td>wage</td>
+<td>62,931</td>
+</tr>
+<tr class="odd">
+<td>60</td>
+<td>bank</td>
+<td>62,018</td>
+</tr>
+<tr class="even">
+<td>61</td>
+<td>rule</td>
+<td>61,256</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>98</td>
+<td>real</td>
+<td>44,515</td>
+</tr>
+<tr class="odd">
+<td>99</td>
+<td>china</td>
+<td>44,042</td>
+</tr>
+<tr class="even">
+<td>100</td>
+<td>every</td>
+<td>44,012</td>
+</tr>
+</tbody>
+</table>
+<figcaption class="figure-caption">
+Appendix 3: Select Top 100 Frequent Words in Economics Subreddits Comments
+</figcaption>
+</figure>
+</center>
+
+<!-- Table 4 above shows the top 100 most frequent words in the comments of the two economics related subreddits. The most frequently used words include "people", "pay", "money", and "work", which are also present in the political subreddits comments. Other notable words include "price", "tax", "inflation", "rate", "market", "house", "high", "job", "buy", "company", "way", "increase", "government", "country", "interest", "lot", "home", "economy", "right", "many", "wage", "bank", "rule", "real", and "china". These words suggest discussions about a variety of economic and political topics, including inflation, prices, taxes, the labor and housing markets, the government, and international affairs with China. -->
+<center>
+<figure class="figure">
+<table class="table">
+<thead>
+<tr class="header">
+<th>Rank</th>
+<th>Word</th>
+<th>TF-IDF Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>blackfriday</td>
+<td>9.762917158451936</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>craic</td>
+<td>9.762917158451936</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>boo</td>
+<td>9.762917158451936</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>bookings</td>
+<td>9.762917158451936</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>acn</td>
+<td>9.762917158451936</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>bookkeeper</td>
+<td>9.762917158451936</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>adm</td>
+<td>9.762917158451936</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>brave</td>
+<td>9.762917158451936</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>aerospace</td>
+<td>9.762917158451936</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>broadcom</td>
+<td>9.762917158451936</td>
+</tr>
+</tbody>
+</table>
+<figcaption class="figure-caption">
+Appendix 4: Top 10 Important Words in Economics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+<center>
+<figure class="figure">
+<table class="table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 45%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Rank</th>
+<th>Word</th>
+<th>Word Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>emancipation</td>
+<td>99.52226201944997</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>sabine</td>
+<td>99.44126423729803</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>spikeproteins</td>
+<td>98.70374062769325</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>willeford</td>
+<td>98.03656936906297</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>tetrapod</td>
+<td>97.42748973013556</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>mikayla</td>
+<td>97.42748973013556</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>subsource</td>
+<td>96.34843497134476</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>arbitration</td>
+<td>95.59369519372572</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>delgado</td>
+<td>95.06230029904857</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>advocateforrightsandknowledgeofamericansarkaghostio</td>
+<td>94.2598337269131</td>
+</tr>
+</tbody>
+</table>
+<figcaption class="figure-caption">
+Appendix 5: Top 10 Important Words in Politics Subreddits Comments
+</figcaption>
+</figure>
+</center>
+<center>
+<figure class="figure">
+<img src="./text_length_econ_subs.png" alt="Histogram Economics Subs" style="margin-left: 10px;" class="figure-img">
+<figcaption class="figure-caption">
+Appendix 6: Histogram of Text Length for Economics Subreddits Submissions
+</figcaption>
+</figure>
+</center>
+<center>
+<figure class="figure">
+<img src="./text_length_pol_comms.png" alt="Histogram Politics Comments" class="figure-img">
+<figcaption class="figure-caption">
+Appendix 7: Histogram of Text Length for Politics Subreddits Comments
+</figcaption>
+</figure>
+</center>
+<center>
+<figure class="figure">
+<img src="./text_length_econ_comms.png" alt="Histogram Econ Comments" class="figure-img">
+<figcaption class="figure-caption">
+Appendix 8: Histogram of Text Length for Economics Subreddits Comments
+</figcaption>
+</figure>
+</center>
+<center>
+<iframe src="https://anthonymoubarak.georgetown.domains/posts-r-conservative/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption>
+Appendix 9: Line Chart of Number of Words Over Time in Economics and Politics Subreddits Submissions and Comments
+</figcaption>
+
+</center>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/posts-r-socialism/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Appendix 10: Line Chart of Number of Words Over Time in Economics and Politics Subreddits Submissions and Comments
+</figcaption>
+</figure>
+</center>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/posts-r-libertarian/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Appendix 11: Line Chart of Number of Words Over Time in Economics and Politics Subreddits Submissions and Comments
+</figcaption>
+</figure>
+</center>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/posts-r-liberal/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Appendix 12: Line Chart of Number of Words Over Time in Economics and Politics Subreddits Submissions and Comments
+</figcaption>
+</figure>
+</center>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./eda.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">EDA</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ml.html" class="pagination-link">
+        <span class="nav-page-text">ML</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Content 2023 by Project Team 1 <br> All content licensed under a <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0)</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">Made with <a href="https://quarto.org/">Quarto</a><br></div>
+  </div>
+</footer>
+
+
+
+</body></html>

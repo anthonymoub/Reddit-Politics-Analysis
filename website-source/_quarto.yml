@@ -1,0 +1,135 @@
+project:
+  type: website
+  output-dir: ../docs
+
+website:
+  title: Group 1 Big Data Project
+  page-navigation: true
+  sidebar:
+    title: Politics & Finance in the Age of Big Reddit Data
+    style: "docked"
+    logo: "logo.png"
+    search: true
+    background: "#d0cce4"
+    contents:
+      - section: "Overview"
+        contents:
+          - index.qmd
+          - business_goals.qmd
+      - section: "Exploratory Data Analysis"
+        contents:
+          - eda.qmd
+      - section: "Natural Language Processing"
+        contents:
+          - nlp.qmd
+      - section: "Machine Learning"
+        contents:
+          - ml.qmd
+      - section: "Conclusion"
+        contents:
+          - conclusion.qmd
+          - discussion.qmd
+      - section: "Code"
+        contents:
+          - section: "Data Gathering"
+            contents:
+              - href: ./code/data_gathering/fred.html
+                text: "fred.ipynb"
+                target: _blank
+              - href: ./code/data_gathering/AskPoltics_Changemyview.html
+                text: "AskPoltics_Changemyview.ipynb"
+                target: _blank
+              - href: ./code/data_gathering/centrist_liberterian.html
+                text: "centrist_liberterian.ipynb"
+                target: _blank
+              - href: ./code/data_gathering/convervative_finance.html
+                text: "convervative_finance.ipynb"
+                target: _blank
+              - href: ./code/data_gathering/socialism_economics_liberal.html
+                text: "socialism_economics_liberal.ipynb"
+                target: _blank
+          - section: "Preprocessing"
+            contents:
+              - href: ./code/preprocessing/data_cleaning.html
+                text: "data_cleaning.ipynb"
+                target: _blank
+              - href: ./code/preprocessing/basic_eda.html
+                text: "basic_eda.ipynb"
+                target: _blank
+              - href: ./code/preprocessing/sentiment_askpolitics_changemyview.html
+                text: "sentiment_askpolitics_changemyview.ipynb"
+                target: _blank
+              - href: ./code/preprocessing/sentiment_centrist_libertarian.html
+                text: "sentiment_centrist_libertarian.ipynb"
+                target: _blank
+              - href: ./code/preprocessing/sentiment_conservative_finance.html
+                text: "sentiment_conservative_finance.ipynb"
+                target: _blank
+              - href: ./code/preprocessing/sentiment_socialism_Economics_Liberal.html
+                text: "sentiment_socialism_Economics_Liberal.ipynb"
+                target: _blank
+              - href: ./code/preprocessing/controversial_processing.html
+                text: "controversial_processing.ipynb"
+                target: _blank
+          - section: "EDA"
+            contents:
+              - href: ./code/eda/anthony_eda.html
+                text: "anthony_eda.ipynb"
+                target: _blank
+              - href: ./code/eda/eric_eda.html
+                text: "eric_eda.ipynb"
+                target: _blank
+              - href: ./code/eda/raunak_eda.html
+                text: "raunak_eda.ipynb"
+                target: _blank
+              - href: ./code/eda/tegveer_eda.html
+                text: "tegveer_eda.ipynb"
+                target: _blank
+          - section: "NLP"
+            contents:
+              - href: ./code/nlp/sentiment.html
+                text: "sentiment.ipynb"
+                target: _blank
+              - href: ./code/nlp/tegveer_nlp_aws.html
+                text: "tegveer_nlp_aws.ipynb"
+                target: _blank
+              - href: ./code/nlp/tegveer_nlp_azure.html
+                text: "tegveer_nlp_azure.ipynb"
+                target: _blank
+          - section: "ML"
+            contents:
+              - href: ./code/ml/controversial_processing.html
+                text: "controversial_processing.ipynb"
+                target: _blank
+              - href: ./code/ml/controversial_classification.html
+                text: "controversial_classification.ipynb"
+                target: _blank
+              - href: ./code/ml/score_regression_raunak.html
+                text: "score_regression_raunak.ipynb"
+                target: _blank
+              - href: ./code/ml/clustering_subreddits.html
+                text: "clustering_subreddits.ipynb"
+                target: _blank
+  page-footer:
+    left: |
+      Content {{< fa brands creative-commons >}} {{< var course.copyright_year >}} by {{< var author.name >}} <br>
+      All content licensed under a {{< fa brands creative-commons >}}
+      {{< fa brands creative-commons-by >}} {{< fa brands creative-commons-nc >}}
+      [Creative Commons Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/)
+    right: |
+      Made with [Quarto](https://quarto.org/)<br>
+
+format:
+  html:
+    theme:
+      - lux
+      - custom.scss
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    code-fold: false
+    code-copy: false
+    code-tools: false
+    code-overflow: wrap
+

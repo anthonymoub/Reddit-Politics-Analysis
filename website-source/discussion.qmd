@@ -1,0 +1,54 @@
+# Discussion
+
+## Project Plans
+No feedback was provided.
+
+## EDA
+1. Data quality checks are not explicitly on the website.
+
+As a part of the EDA section, our group necessarily performed data cleaning and sanity checks. These were local to our codebase. However, for the sake of transparency, the data quality checks that we performed have been added under the `Code/Preprocessing` section.
+
+2. Business goals are vague and not directly mapped.
+
+This feedback spills over into the NLP and ML sections as well. As such, we've reworded the business goals and technical summaries to be less vague. Furthermore, we've directly mapped our analyses in all of our sections to the aforementioned business goals.
+
+3. Many plots are repetitive.
+
+This feedback spills over into the NLP and ML sections as well. Because we deal with multiple political and economic subreddits, having multiple similar-looking plots was an inevitability. However, for the sake of narrative flow and clarity, we've created appendices in each section for references to repetitive plots.
+
+4. Expand shared user base analysis to LDA Topic Modeling using either cosine similarity or LDA Topic Modeling to further explore the business goal on common authors in political subreddits.
+
+This was an interesting avenue to further expand one of our business goals. We, therefore, implemented an LDA model on a filtered dataset of common users in political subreddits to identify whether users who comment on multiple subreddits also tend to engage on similar topics. Selecting five as the desired number of topics, we found that users do engage in other, unique topics across subreddits, with the topics being mainly political and very few economy related topics. The visualization and table below summarizes the topics that users engage in across subreddits:
+
+<center>
+<figure>
+<iframe src="https://tegveerg.georgetown.domains/big_data_shared_users_lda/lda_shared_users_subs.html" width="800px" height="900px"></iframe>
+<figcaption>Figure 1: Interactive Visualization of Submissions Topics Across Shared User Subreddits</figcaption>
+</figure>
+</center>
+
+<center>
+<figure>
+| Topic | Topic Words                                    | Summary                                        |
+|-------|------------------------------------------------|------------------------------------------------|
+| 1     | people, think, want, good, right, cmv (change my view), life, use, change, believe | Exploring perspectives and beliefs in political discourse to understand and potentially alter their own opinions. This topic is also seen in the LDA visualization for politics submissions.     |
+| 2     | widen (Biden), Trump, cmv (change my view), democrat, republican, gun, school vote, party, bill, crime |  Discussions related to political parties and the broader national context. This topic is also seen in the LDA visualization for politics submissions. |
+| 3     | right, white, support, war, system, capitol, society, kill, russia  | Discussions related to right-wing politics, Jan. 6 Capitol attack, and Russia-Ukraine war. This is a unique topic from previously analyzed economics and politics submissions!  |
+| 4     | covid, law, police, ban, news, court, liberal, vaccine, joe, china, abortion, supreme, inflation, rule, freedom | Discussions related to left-wing politics, such as the Supreme Court overturning Roe v. Wade, COVID-19, and police brutality. Another unique topic! |
+| 5     | new, conservative, libertarian, socialism, twitter, death, mask, racism, drug, economy, property, musk | A mix of different political subreddits discussing multifarious societal issues, such as social media and twitter, racism, drugs, and the economy. Another unique topic! |
+<figcaption>Table 1: Summary of Submissions Topics Across Shared User Subreddits</figcaption>
+</figure>
+</center>
+
+## NLP
+No feedback was provided.
+
+## ML
+1. Model performances are a concern, especially with the volatility of user interactions online.
+
+Unfortunately, our models definitely were underwhelming. However, this seems like an inevitability given the distributions of our feature variables and the skewedness of many of our target variables.  
+
+## Website / Results
+1. Default website formatting and styling are too mundane.
+
+The given website starter template was useful but wasn't very aesthetic or well-organized as the project progressed. As such, we've added the sidebar with splits per section, and subsections for each large section if necessary. Additionally, we've customized the color theme, font, and other minor aesthetic features.

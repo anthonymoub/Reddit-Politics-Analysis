@@ -1,0 +1,2742 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient"
+      ],
+      "outputs": [],
+      "execution_count": 4,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1700188160094
+        }
+      },
+      "id": "c7fd1a98-ac30-4f94-905a-f892fc497814"
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "outputs": [],
+      "execution_count": null,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "88ea8f4f-55ef-497e-a21d-ddb12abeb6f7"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "spark"
+      ],
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "application/vnd.livy.statement-meta+json": {
+              "spark_pool": "17b2472e-89f2-4244-b483-22f4ee0cf696",
+              "session_id": "1",
+              "statement_id": 6,
+              "state": "finished",
+              "livy_statement_state": "available",
+              "queued_time": "2023-11-17T02:40:12.8101855Z",
+              "session_start_time": "2023-11-17T02:40:12.8413449Z",
+              "execution_start_time": "2023-11-17T02:43:29.0262567Z",
+              "execution_finish_time": "2023-11-17T02:43:31.9668899Z",
+              "spark_jobs": {
+                "numbers": {
+                  "FAILED": 0,
+                  "SUCCEEDED": 0,
+                  "UNKNOWN": 0,
+                  "RUNNING": 0
+                },
+                "jobs": [],
+                "limit": 20,
+                "rule": "ALL_DESC"
+              },
+              "parent_msg_id": "a0a43ad8-1b57-4a62-9771-c4b72d46aab0"
+            },
+            "text/plain": "StatementMeta(17b2472e-89f2-4244-b483-22f4ee0cf696, 1, 6, Finished, Available)"
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "execute_result",
+          "execution_count": 11,
+          "data": {
+            "text/plain": "<pyspark.sql.session.SparkSession at 0x7f826485bb20>",
+            "text/html": "\n            <div>\n                <p><b>SparkSession - hive</b></p>\n                \n        <div>\n            <p><b>SparkContext</b></p>\n\n            <p><a href=\"http://vm-c3335779:35459\">Spark UI</a></p>\n\n            <dl>\n              <dt>Version</dt>\n                <dd><code>v3.3.1.5.2-108696741</code></dd>\n              <dt>Master</dt>\n                <dd><code>yarn</code></dd>\n              <dt>AppName</dt>\n                <dd><code>Azure ML Experiment</code></dd>\n            </dl>\n        </div>\n        \n            </div>\n        "
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 1,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1700189012132
+        }
+      },
+      "id": "d5aed319-0bbb-416b-b85d-7432f648ebee"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "from azure.storage.blob import BlobServiceClient\n",
+        "import io\n",
+        "\n",
+        "# Azure Storage Account details\n",
+        "connection_string = \"DefaultEndpointsProtocol=https;AccountName=group01astorage63e260f45;AccountKey=iGcY4Un0hlKMMqSs6BlLhmqNU0D7m8uJyVz2din6CTAp3AvM3QPH8/Tk8k+xN77D5R3KXvJZYBwX+AStLsNR5Q==;EndpointSuffix=core.windows.net\"\n",
+        "container_name = \"azureml-blobstore-a1e50e78-9796-4cfe-a8bb-88f7de188a74\"\n",
+        "\n",
+        "# Initialize the BlobServiceClient\n",
+        "blob_service_client = BlobServiceClient.from_connection_string(connection_string)\n",
+        "\n",
+        "# Get the first file name from the list\n",
+        "first_file_name = 'submissions/part-00000-2c5869bf-34c0-4862-92c3-97869f59b868-c000.snappy.parquet'\n",
+        "\n",
+        "# Get the blob client for the first file\n",
+        "blob_client = blob_service_client.get_blob_client(container=container_name, blob=first_file_name)\n",
+        "\n",
+        "# Download the blob to a stream\n",
+        "with io.BytesIO() as input_blob:\n",
+        "    blob_client.download_blob().readinto(input_blob)\n",
+        "    input_blob.seek(0)  # Go to the start of the stream\n",
+        "\n",
+        "    # Read the parquet file\n",
+        "    df = pd.read_parquet(input_blob, engine='pyarrow')\n",
+        "\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "application/vnd.livy.statement-meta+json": {
+              "spark_pool": "17b2472e-89f2-4244-b483-22f4ee0cf696",
+              "session_id": "1",
+              "statement_id": 15,
+              "state": "finished",
+              "livy_statement_state": "available",
+              "queued_time": "2023-11-17T02:51:19.4981269Z",
+              "session_start_time": null,
+              "execution_start_time": "2023-11-17T02:51:19.6084071Z",
+              "execution_finish_time": "2023-11-17T02:51:20.4877333Z",
+              "spark_jobs": {
+                "numbers": {
+                  "FAILED": 0,
+                  "SUCCEEDED": 0,
+                  "UNKNOWN": 0,
+                  "RUNNING": 0
+                },
+                "jobs": [],
+                "limit": 20,
+                "rule": "ALL_DESC"
+              },
+              "parent_msg_id": "a511c7fc-8f24-49ae-8962-fb643ea34c13"
+            },
+            "text/plain": "StatementMeta(17b2472e-89f2-4244-b483-22f4ee0cf696, 1, 15, Finished, Available)"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 10,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1700189480572
+        }
+      },
+      "id": "4dea4f06-79a6-441f-815d-b495c25717cc"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Initialize the BlobServiceClient\n",
+        "blob_service_client = BlobServiceClient.from_connection_string(connection_string)\n",
+        "\n",
+        "# Get the list of files\n",
+        "files = fs.glob('submissions/*.parquet')\n",
+        "\n",
+        "# Initialize an empty list to hold DataFrames\n",
+        "dfs = []\n",
+        "\n",
+        "for file in files:  # Skip the first file\n",
+        "    # Get the blob client for the file\n",
+        "    blob_client = blob_service_client.get_blob_client(container=container_name, blob=file)\n",
+        "\n",
+        "    # Download the blob to a stream\n",
+        "    with io.BytesIO() as input_blob:\n",
+        "        blob_client.download_blob().readinto(input_blob)\n",
+        "        input_blob.seek(0)  # Go to the start of the stream\n",
+        "\n",
+        "        # Read the parquet file\n",
+        "        df = pd.read_parquet(input_blob, engine='pyarrow')\n",
+        "        dfs.append(df)\n",
+        "\n",
+        "# Concatenate all DataFrames in the list\n",
+        "combined_df = pd.concat(dfs, ignore_index=True)\n",
+        "\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "application/vnd.livy.statement-meta+json": {
+              "spark_pool": "17b2472e-89f2-4244-b483-22f4ee0cf696",
+              "session_id": "1",
+              "statement_id": 20,
+              "state": "finished",
+              "livy_statement_state": "available",
+              "queued_time": "2023-11-17T02:54:26.552759Z",
+              "session_start_time": null,
+              "execution_start_time": "2023-11-17T02:54:26.6502732Z",
+              "execution_finish_time": "2023-11-17T02:54:32.9343224Z",
+              "spark_jobs": {
+                "numbers": {
+                  "FAILED": 0,
+                  "SUCCEEDED": 0,
+                  "UNKNOWN": 0,
+                  "RUNNING": 0
+                },
+                "jobs": [],
+                "limit": 20,
+                "rule": "ALL_DESC"
+              },
+              "parent_msg_id": "be7accbe-18be-402f-88fc-f9bc9aad8fbf"
+            },
+            "text/plain": "StatementMeta(17b2472e-89f2-4244-b483-22f4ee0cf696, 1, 20, Finished, Available)"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 15,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1700189673085
+        }
+      },
+      "id": "4574661a-7233-474a-a31e-389a034e870c"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "combined_df"
+      ],
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "application/vnd.livy.statement-meta+json": {
+              "spark_pool": "17b2472e-89f2-4244-b483-22f4ee0cf696",
+              "session_id": "1",
+              "statement_id": 21,
+              "state": "finished",
+              "livy_statement_state": "available",
+              "queued_time": "2023-11-17T02:54:34.0408605Z",
+              "session_start_time": null,
+              "execution_start_time": "2023-11-17T02:54:34.1408989Z",
+              "execution_finish_time": "2023-11-17T02:54:34.9552477Z",
+              "spark_jobs": {
+                "numbers": {
+                  "FAILED": 0,
+                  "SUCCEEDED": 0,
+                  "UNKNOWN": 0,
+                  "RUNNING": 0
+                },
+                "jobs": [],
+                "limit": 20,
+                "rule": "ALL_DESC"
+              },
+              "parent_msg_id": "be2d4446-0527-40af-9b71-f624ab1edd52"
+            },
+            "text/plain": "StatementMeta(17b2472e-89f2-4244-b483-22f4ee0cf696, 1, 21, Finished, Available)"
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "execute_result",
+          "execution_count": 41,
+          "data": {
+            "text/plain": "                     author  \\\n0              mindvarious2   \n1                poohbadger   \n2              pashotboshot   \n3             EternityWatch   \n4              pashotboshot   \n...                     ...   \n599903        ChunkyArsenio   \n599904            [deleted]   \n599905             Ferloopa   \n599906  Calm-Hovercraft9858   \n599907         wid_widiarty   \n\n                                                    title  \\\n0       How do I cope with \"centrists\" and \"free speec...   \n1       opinions on adam curtis? any other compelling ...   \n2                                  Behind the War on Iraq   \n3                        St.Louis I'm disappointed in you   \n4       Ireland’s Struggle for Self-determination: Rob...   \n...                                                   ...   \n599903  Augusto Zimmermann  Aband ning G d May Lead to...   \n599904  Ice cream establishment refuses to serve anyon...   \n599905  Pregnancy centers attacked by pro abortion ter...   \n599906  CNN Surprised By What We All Know  New Firearm...   \n599907                 hello can you help me for the game   \n\n                                                 selftext     subreddit  \\\n0       I'm nontrad (almost 30) and in a 4-year univer...     socialism   \n1       obviously his docs are very compelling and you...     socialism   \n2                                                             socialism   \n3                                                             socialism   \n4                                                             socialism   \n...                                                   ...           ...   \n599903                                                     Conservative   \n599904                                          [deleted]  Conservative   \n599905                                                     Conservative   \n599906                                                     Conservative   \n599907                                                          finance   \n\n        score  num_comments  \\\n0          64            25   \n1           2             2   \n2           3             0   \n3          27             2   \n4          27             0   \n...       ...           ...   \n599903      7             9   \n599904      1             0   \n599905     45             9   \n599906    365            40   \n599907      1             0   \n\n                                                permalink         created_utc  \\\n0       /r/socialism/comments/rmfu23/how_do_i_cope_wit... 2021-12-22 21:56:12   \n1       /r/socialism/comments/rmfutg/opinions_on_adam_... 2021-12-22 21:57:16   \n2       /r/socialism/comments/rmfydh/behind_the_war_on... 2021-12-22 22:01:44   \n3       /r/socialism/comments/q6r1jf/stlouis_im_disapp... 2021-10-12 17:17:46   \n4       /r/socialism/comments/q6r3ss/irelands_struggle... 2021-10-12 17:20:39   \n...                                                   ...                 ...   \n599903  /r/Conservative/comments/vomjw4/augusto_zimmer... 2022-06-30 23:51:28   \n599904  /r/Conservative/comments/vomkd1/ice_cream_esta... 2022-06-30 23:52:09   \n599905  /r/Conservative/comments/vomo9y/pregnancy_cent... 2022-06-30 23:57:53   \n599906  /r/Conservative/comments/xsggga/cnn_surprised_... 2022-09-30 23:53:41   \n599907  /r/finance/comments/xsgkyo/hello_can_you_help_... 2022-09-30 23:59:51   \n\n                                                      url  \\\n0       https://www.reddit.com/r/socialism/comments/rm...   \n1       https://www.reddit.com/r/socialism/comments/rm...   \n2       https://monthlyreview.org/2003/05/01/behind-th...   \n3                     https://i.redd.it/0xyvi4i0z1t71.jpg   \n4       https://liberatedtexts.com/reviews/irelands-st...   \n...                                                   ...   \n599903  https://www.theepochtimes.com/abandoning-god-m...   \n599904                https://i.redd.it/nop7j76u0w891.jpg   \n599905  https://www.liveaction.org/news/pregnancy-cent...   \n599906  https://www.thetruthaboutguns.com/cnn-surprise...   \n599907          https://go2affm.com/c/?p=16528&amp;o=9193   \n\n                       domain  ...  over_18  stickied  \\\n0              self.socialism  ...    False     False   \n1              self.socialism  ...    False     False   \n2           monthlyreview.org  ...    False     False   \n3                   i.redd.it  ...    False     False   \n4          liberatedtexts.com  ...    False     False   \n...                       ...  ...      ...       ...   \n599903      theepochtimes.com  ...    False     False   \n599904              i.redd.it  ...    False     False   \n599905         liveaction.org  ...    False     False   \n599906  thetruthaboutguns.com  ...    False     False   \n599907            go2affm.com  ...    False     False   \n\n                                                thumbnail  media  \\\n0                                                    self   None   \n1                                                    self   None   \n2       https://a.thumbs.redditmedia.com/9I-I-jdRdZf-G...   None   \n3                                                 default   None   \n4       https://b.thumbs.redditmedia.com/1dPE9QJJGp4jr...   None   \n...                                                   ...    ...   \n599903  https://b.thumbs.redditmedia.com/nKuqrSCgMpJ_y...   None   \n599904                                            default   None   \n599905  https://b.thumbs.redditmedia.com/c13Htsjzp7ahv...   None   \n599906  https://b.thumbs.redditmedia.com/hrI0u_NZ2M75P...   None   \n599907                                            default   None   \n\n        secure_media  gilded archived distinguished crosspost_parent  \\\n0               None       0    False          None             None   \n1               None       0    False          None             None   \n2               None       0    False          None             None   \n3               None       0    False          None             None   \n4               None       0    False          None             None   \n...              ...     ...      ...           ...              ...   \n599903          None       0    False          None             None   \n599904          None       0    False          None             None   \n599905          None       0    False          None             None   \n599906          None       0    False          None             None   \n599907          None       0    False          None             None   \n\n        crosspost_parent_list  \n0                        None  \n1                        None  \n2                        None  \n3                        None  \n4                        None  \n...                       ...  \n599903                   None  \n599904                   None  \n599905                   None  \n599906                   None  \n599907                   None  \n\n[599908 rows x 24 columns]",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>author</th>\n      <th>title</th>\n      <th>selftext</th>\n      <th>subreddit</th>\n      <th>score</th>\n      <th>num_comments</th>\n      <th>permalink</th>\n      <th>created_utc</th>\n      <th>url</th>\n      <th>domain</th>\n      <th>...</th>\n      <th>over_18</th>\n      <th>stickied</th>\n      <th>thumbnail</th>\n      <th>media</th>\n      <th>secure_media</th>\n      <th>gilded</th>\n      <th>archived</th>\n      <th>distinguished</th>\n      <th>crosspost_parent</th>\n      <th>crosspost_parent_list</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>mindvarious2</td>\n      <td>How do I cope with \"centrists\" and \"free speec...</td>\n      <td>I'm nontrad (almost 30) and in a 4-year univer...</td>\n      <td>socialism</td>\n      <td>64</td>\n      <td>25</td>\n      <td>/r/socialism/comments/rmfu23/how_do_i_cope_wit...</td>\n      <td>2021-12-22 21:56:12</td>\n      <td>https://www.reddit.com/r/socialism/comments/rm...</td>\n      <td>self.socialism</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>self</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>poohbadger</td>\n      <td>opinions on adam curtis? any other compelling ...</td>\n      <td>obviously his docs are very compelling and you...</td>\n      <td>socialism</td>\n      <td>2</td>\n      <td>2</td>\n      <td>/r/socialism/comments/rmfutg/opinions_on_adam_...</td>\n      <td>2021-12-22 21:57:16</td>\n      <td>https://www.reddit.com/r/socialism/comments/rm...</td>\n      <td>self.socialism</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>self</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>pashotboshot</td>\n      <td>Behind the War on Iraq</td>\n      <td></td>\n      <td>socialism</td>\n      <td>3</td>\n      <td>0</td>\n      <td>/r/socialism/comments/rmfydh/behind_the_war_on...</td>\n      <td>2021-12-22 22:01:44</td>\n      <td>https://monthlyreview.org/2003/05/01/behind-th...</td>\n      <td>monthlyreview.org</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>https://a.thumbs.redditmedia.com/9I-I-jdRdZf-G...</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>EternityWatch</td>\n      <td>St.Louis I'm disappointed in you</td>\n      <td></td>\n      <td>socialism</td>\n      <td>27</td>\n      <td>2</td>\n      <td>/r/socialism/comments/q6r1jf/stlouis_im_disapp...</td>\n      <td>2021-10-12 17:17:46</td>\n      <td>https://i.redd.it/0xyvi4i0z1t71.jpg</td>\n      <td>i.redd.it</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>default</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>pashotboshot</td>\n      <td>Ireland’s Struggle for Self-determination: Rob...</td>\n      <td></td>\n      <td>socialism</td>\n      <td>27</td>\n      <td>0</td>\n      <td>/r/socialism/comments/q6r3ss/irelands_struggle...</td>\n      <td>2021-10-12 17:20:39</td>\n      <td>https://liberatedtexts.com/reviews/irelands-st...</td>\n      <td>liberatedtexts.com</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>https://b.thumbs.redditmedia.com/1dPE9QJJGp4jr...</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>599903</th>\n      <td>ChunkyArsenio</td>\n      <td>Augusto Zimmermann  Aband ning G d May Lead to...</td>\n      <td></td>\n      <td>Conservative</td>\n      <td>7</td>\n      <td>9</td>\n      <td>/r/Conservative/comments/vomjw4/augusto_zimmer...</td>\n      <td>2022-06-30 23:51:28</td>\n      <td>https://www.theepochtimes.com/abandoning-god-m...</td>\n      <td>theepochtimes.com</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>https://b.thumbs.redditmedia.com/nKuqrSCgMpJ_y...</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n    <tr>\n      <th>599904</th>\n      <td>[deleted]</td>\n      <td>Ice cream establishment refuses to serve anyon...</td>\n      <td>[deleted]</td>\n      <td>Conservative</td>\n      <td>1</td>\n      <td>0</td>\n      <td>/r/Conservative/comments/vomkd1/ice_cream_esta...</td>\n      <td>2022-06-30 23:52:09</td>\n      <td>https://i.redd.it/nop7j76u0w891.jpg</td>\n      <td>i.redd.it</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>default</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n    <tr>\n      <th>599905</th>\n      <td>Ferloopa</td>\n      <td>Pregnancy centers attacked by pro abortion ter...</td>\n      <td></td>\n      <td>Conservative</td>\n      <td>45</td>\n      <td>9</td>\n      <td>/r/Conservative/comments/vomo9y/pregnancy_cent...</td>\n      <td>2022-06-30 23:57:53</td>\n      <td>https://www.liveaction.org/news/pregnancy-cent...</td>\n      <td>liveaction.org</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>https://b.thumbs.redditmedia.com/c13Htsjzp7ahv...</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n    <tr>\n      <th>599906</th>\n      <td>Calm-Hovercraft9858</td>\n      <td>CNN Surprised By What We All Know  New Firearm...</td>\n      <td></td>\n      <td>Conservative</td>\n      <td>365</td>\n      <td>40</td>\n      <td>/r/Conservative/comments/xsggga/cnn_surprised_...</td>\n      <td>2022-09-30 23:53:41</td>\n      <td>https://www.thetruthaboutguns.com/cnn-surprise...</td>\n      <td>thetruthaboutguns.com</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>https://b.thumbs.redditmedia.com/hrI0u_NZ2M75P...</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n    <tr>\n      <th>599907</th>\n      <td>wid_widiarty</td>\n      <td>hello can you help me for the game</td>\n      <td></td>\n      <td>finance</td>\n      <td>1</td>\n      <td>0</td>\n      <td>/r/finance/comments/xsgkyo/hello_can_you_help_...</td>\n      <td>2022-09-30 23:59:51</td>\n      <td>https://go2affm.com/c/?p=16528&amp;amp;o=9193</td>\n      <td>go2affm.com</td>\n      <td>...</td>\n      <td>False</td>\n      <td>False</td>\n      <td>default</td>\n      <td>None</td>\n      <td>None</td>\n      <td>0</td>\n      <td>False</td>\n      <td>None</td>\n      <td>None</td>\n      <td>None</td>\n    </tr>\n  </tbody>\n</table>\n<p>599908 rows × 24 columns</p>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 16,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1700189675081
+        }
+      },
+      "id": "3fc8dcf8-d007-4b67-a44e-fd0c90bc7fa3"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Setup "
+      ],
+      "metadata": {},
+      "id": "51e0d3c8-e509-46e6-916f-a56bd6f97b7b"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Setup - Run only once per Kernel App\n",
+        "%conda install openjdk -y\n",
+        "\n",
+        "# install PySpark\n",
+        "%pip install pyspark==3.3.0\n",
+        "\n",
+        "# restart kernel\n",
+        "from IPython.core.display import HTML\n",
+        "HTML(\"<script>Jupyter.notebook.kernel.restart()</script>\")"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Collecting package metadata (current_repodata.json): done\nSolving environment: done\n\n\n==> WARNING: A newer version of conda exists. <==\n  current version: 23.3.1\n  latest version: 23.10.0\n\nPlease update conda by running\n\n    $ conda update -n base -c defaults conda\n\nOr to minimize the number of packages updated during conda update use\n\n     conda install conda=23.10.0\n\n\n\n# All requested packages already installed.\n\n\nNote: you may need to restart the kernel to use updated packages.\nRequirement already satisfied: pyspark==3.3.0 in /opt/conda/lib/python3.10/site-packages (3.3.0)\nRequirement already satisfied: py4j==0.10.9.5 in /opt/conda/lib/python3.10/site-packages (from pyspark==3.3.0) (0.10.9.5)\n\u001b[33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv\u001b[0m\u001b[33m\n\u001b[0m\n\u001b[1m[\u001b[0m\u001b[34;49mnotice\u001b[0m\u001b[1;39;49m]\u001b[0m\u001b[39;49m A new release of pip is available: \u001b[0m\u001b[31;49m23.2.1\u001b[0m\u001b[39;49m -> \u001b[0m\u001b[32;49m23.3.1\u001b[0m\n\u001b[1m[\u001b[0m\u001b[34;49mnotice\u001b[0m\u001b[1;39;49m]\u001b[0m\u001b[39;49m To update, run: \u001b[0m\u001b[32;49mpip install --upgrade pip\u001b[0m\nNote: you may need to restart the kernel to use updated packages.\n"
+        },
+        {
+          "output_type": "execute_result",
+          "execution_count": 2,
+          "data": {
+            "text/html": "<script>Jupyter.notebook.kernel.restart()</script>",
+            "text/plain": "<IPython.core.display.HTML object>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 2,
+      "metadata": {
+        "tags": []
+      },
+      "id": "7acc0590-6ee2-4fd0-8889-21742dd0e0b2"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Import pyspark and build Spark session\n",
+        "from pyspark.sql import SparkSession\n",
+        "\n",
+        "spark = (\n",
+        "    SparkSession.builder.appName(\"PySparkApp\")\n",
+        "    .config(\"spark.jars.packages\", \"org.apache.hadoop:hadoop-aws:3.2.2\")\n",
+        "    .config(\n",
+        "        \"fs.s3a.aws.credentials.provider\",\n",
+        "        \"com.amazonaws.auth.ContainerCredentialsProvider\",\n",
+        "    )\n",
+        "    .getOrCreate()\n",
+        ")\n",
+        "\n",
+        "print(spark.version)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "Warning: Ignoring non-Spark config property: fs.s3a.aws.credentials.provider\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": ":: loading settings :: url = jar:file:/opt/conda/lib/python3.10/site-packages/pyspark/jars/ivy-2.5.0.jar!/org/apache/ivy/core/settings/ivysettings.xml\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "Ivy Default Cache set to: /root/.ivy2/cache\nThe jars for the packages stored in: /root/.ivy2/jars\norg.apache.hadoop#hadoop-aws added as a dependency\n:: resolving dependencies :: org.apache.spark#spark-submit-parent-3ea40dd1-8c9d-4578-b64a-d01e590d83c1;1.0\n\tconfs: [default]\n\tfound org.apache.hadoop#hadoop-aws;3.2.2 in central\n\tfound com.amazonaws#aws-java-sdk-bundle;1.11.563 in central\n:: resolution report :: resolve 366ms :: artifacts dl 28ms\n\t:: modules in use:\n\tcom.amazonaws#aws-java-sdk-bundle;1.11.563 from central in [default]\n\torg.apache.hadoop#hadoop-aws;3.2.2 from central in [default]\n\t---------------------------------------------------------------------\n\t|                  |            modules            ||   artifacts   |\n\t|       conf       | number| search|dwnlded|evicted|| number|dwnlded|\n\t---------------------------------------------------------------------\n\t|      default     |   2   |   0   |   0   |   0   ||   2   |   0   |\n\t---------------------------------------------------------------------\n:: retrieving :: org.apache.spark#spark-submit-parent-3ea40dd1-8c9d-4578-b64a-d01e590d83c1\n\tconfs: [default]\n\t0 artifacts copied, 2 already retrieved (0kB/18ms)\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "23/11/13 19:00:12 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "Setting default log level to \"WARN\".\nTo adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "3.3.0\n"
+        }
+      ],
+      "execution_count": 3,
+      "metadata": {
+        "tags": []
+      },
+      "id": "4831541c-4d77-44a8-860b-5f41acad8ced"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import sagemaker\n",
+        "\n",
+        "session = sagemaker.Session()\n",
+        "bucket = session.default_bucket()\n",
+        "print(bucket)\n",
+        "\n",
+        "# Create or retrieve a Spark session\n",
+        "spark = SparkSession.builder.appName(\"ReadS3Parquet\").getOrCreate()\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "sagemaker.config INFO - Not applying SDK defaults from location: /etc/xdg/sagemaker/config.yaml\nsagemaker.config INFO - Not applying SDK defaults from location: /root/.config/sagemaker/config.yaml\nsagemaker.config INFO - Not applying SDK defaults from location: /etc/xdg/sagemaker/config.yaml\nsagemaker.config INFO - Not applying SDK defaults from location: /root/.config/sagemaker/config.yaml\nsagemaker-us-east-1-711387073580\n23/11/13 19:00:21 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.\n"
+        }
+      ],
+      "execution_count": 4,
+      "metadata": {
+        "tags": []
+      },
+      "id": "43489746-6ffd-4cd4-b9bc-dc699ac76fb5"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyspark.sql.functions import date_format\n",
+        "from pyspark.sql.functions import avg\n",
+        "from pyspark.sql.functions import to_date\n",
+        "from pyspark.sql.functions import date_format\n",
+        "from pyspark.sql.functions import count"
+      ],
+      "outputs": [],
+      "execution_count": 5,
+      "metadata": {
+        "tags": []
+      },
+      "id": "1e0fde6b-2a5d-4dde-9cbc-bbe3ac411c6b"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Data"
+      ],
+      "metadata": {},
+      "id": "0c7f3a57-82a8-493a-9e09-b95a2328c339"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# S3 directory path\n",
+        "s3_directory = f\"s3a://{bucket}/project/cleaned/comments/\"\n",
+        "\n",
+        "# Read all the Parquet files in the directory into a DataFrame\n",
+        "df_comments = spark.read.parquet(s3_directory)"
+      ],
+      "outputs": [],
+      "execution_count": 50,
+      "metadata": {
+        "tags": []
+      },
+      "id": "315f961d-4576-444a-a26b-6a99fe9d1dfa"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# S3 directory path\n",
+        "s3_directory = f\"s3a://{bucket}/project/cleaned/submissions/\"\n",
+        "\n",
+        "# Read all the Parquet files in the directory into a DataFrame\n",
+        "df_submissions = spark.read.parquet(s3_directory)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "23/11/13 16:17:39 WARN package: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.\n"
+        }
+      ],
+      "execution_count": 8,
+      "metadata": {
+        "tags": []
+      },
+      "id": "ba8ca0c4-f6d8-4665-9885-6b39adca277c"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Importing Data for other Subreddits "
+      ],
+      "metadata": {},
+      "id": "5a3e4b22-be3e-41fc-99dc-7a9e75119651"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Tegveer subreddits\n",
+        "tegveer_bucket = 'sagemaker-us-east-1-433974840707'\n",
+        "s3_directory_tegveer = f\"s3a://{tegveer_bucket}/project/cleaned/submissions/\"\n",
+        "s3_directory_tegveer_comments = f\"s3a://{tegveer_bucket}/project/cleaned/comments/\"\n",
+        "\n",
+        "# Read all the Parquet files in the directory into a DataFrame\n",
+        "df_submissions_centrist_liberterian = spark.read.parquet(s3_directory_tegveer)\n",
+        "df_comments_centrist_liberterian = spark.read.parquet(s3_directory_tegveer_comments)\n"
+      ],
+      "outputs": [],
+      "execution_count": 9,
+      "metadata": {
+        "tags": []
+      },
+      "id": "95a7ddfb-8268-4c25-9128-960ae28f1f15"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Eric subreddits\n",
+        "eric_bucket = 'sagemaker-us-east-1-395393721134'\n",
+        "s3_directory_eric = f\"s3a://{eric_bucket}/project/cleaned/submissions/\"\n",
+        "s3_directory_eric_comments = f\"s3a://{eric_bucket}/project/cleaned/comments/\"\n",
+        "\n",
+        "# Read all the Parquet files in the directory into a DataFrame\n",
+        "df_submissions_socialism_economics = spark.read.parquet(s3_directory_eric)\n",
+        "df_submissions_socialism_economics_comments = spark.read.parquet(s3_directory_eric_comments)"
+      ],
+      "outputs": [],
+      "execution_count": 10,
+      "metadata": {
+        "tags": []
+      },
+      "id": "8646d738-c57b-43f8-91de-bb2931f2fe02"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Raunak subreddits\n",
+        "\n",
+        "raunak_bucket = 'sagemaker-us-east-1-224518912016'\n",
+        "s3_directory_raunak = f\"s3a://{raunak_bucket}/project/cleaned/submissions/\"\n",
+        "s3_directory_raunak_comments = f\"s3a://{raunak_bucket}/project/cleaned/comments/\"\n",
+        "\n",
+        "# Read all the Parquet files in the directory into a DataFrame\n",
+        "df_submissions_conservative_finance = spark.read.parquet(s3_directory_raunak)\n",
+        "df_submissions_conservative_finance_comments = spark.read.parquet(s3_directory_raunak_comments)"
+      ],
+      "outputs": [],
+      "execution_count": 11,
+      "metadata": {
+        "tags": []
+      },
+      "id": "4d770c3e-feaf-4db1-b077-29b682a92c82"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# My subreddits \n",
+        "\n",
+        "df_submissions_askpol_cmv = df_submissions.filter(df_submissions['subreddit'].isin(['changemyview', 'Ask_Politics']))"
+      ],
+      "outputs": [],
+      "execution_count": 12,
+      "metadata": {
+        "tags": []
+      },
+      "id": "2ef29a1f-84c0-44b9-a02b-e8ce220a1753"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Sample Embeddings"
+      ],
+      "metadata": {},
+      "id": "f89fb49e-83ee-4dbb-9f6d-7f55e0c298f7"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_submissions_conservative_finance.select(['subreddit' , 'selftext']).show()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "[Stage 8:>                                                          (0 + 1) / 1]\r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "+------------+---------+\n|   subreddit| selftext|\n+------------+---------+\n|Conservative|         |\n|Conservative|         |\n|Conservative|         |\n|Conservative|         |\n|Conservative|         |\n|Conservative|[removed]|\n|Conservative|         |\n|Conservative|         |\n|Conservative|         |\n|Conservative|         |\n|Conservative|[removed]|\n|Conservative|         |\n|Conservative|         |\n|Conservative|         |\n|Conservative|[removed]|\n|Conservative|         |\n|Conservative|         |\n|Conservative|[deleted]|\n|Conservative|         |\n|Conservative|         |\n+------------+---------+\nonly showing top 20 rows\n\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 13,
+      "metadata": {
+        "tags": []
+      },
+      "id": "a40a8a7c-dfcf-439e-8eaa-59153e8de506"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "# Assuming df_submissions_conservative_finance is your DataFrame\n",
+        "# Filter out rows where 'selftext' is empty, '[deleted]', or '[removed]'\n",
+        "df_filtered = df_submissions_conservative_finance[\n",
+        "    ~df_submissions_conservative_finance['selftext'].isin(['', '[deleted]', '[removed]'])\n",
+        "]\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "df_filtered = df_filtered.select(['subreddit' , 'selftext'])"
+      ],
+      "outputs": [],
+      "execution_count": 14,
+      "metadata": {
+        "tags": []
+      },
+      "id": "6d0aab49-441e-4524-a1a1-63ada27df93d"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Subset to test code \n",
+        "df_filtered_subset = df_filtered.limit(10)"
+      ],
+      "outputs": [],
+      "execution_count": 15,
+      "metadata": {
+        "tags": []
+      },
+      "id": "f723f034-6495-4649-b559-fb62aa2413f4"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_filtered_subset.show()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "[Stage 9:>                                                          (0 + 1) / 1]\r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "+------------+--------------------+\n|   subreddit|            selftext|\n+------------+--------------------+\n|     finance|This is your safe...|\n|     finance|This is your safe...|\n|Conservative|If you re a resid...|\n|Conservative|Biden is expected...|\n|Conservative|I have a family m...|\n|     finance|This is your safe...|\n|Conservative|I m writing an in...|\n|Conservative|Inverse  Scientis...|\n|     finance|This is your safe...|\n|Conservative|Seriously  What t...|\n+------------+--------------------+\n\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 16,
+      "metadata": {},
+      "id": "2f2c0a1a-5a79-4705-9578-e32cc58c6494"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyspark.ml.feature import Tokenizer, Word2Vec\n",
+        "from pyspark.sql.functions import col\n",
+        "\n",
+        "# Step 2: Tokenize the Text\n",
+        "tokenizer = Tokenizer(inputCol=\"selftext\", outputCol=\"words\")\n",
+        "df_tokenized = tokenizer.transform(df_filtered_subset)\n",
+        "\n",
+        "# Step 3: Create and Train Word2Vec Model\n",
+        "word2Vec = Word2Vec(vectorSize=100, minCount=0, inputCol=\"words\", outputCol=\"embeddings\")\n",
+        "model = word2Vec.fit(df_tokenized)\n",
+        "\n",
+        "# Step 4: Transform the Data\n",
+        "df_with_embeddings = model.transform(df_tokenized)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "23/11/13 16:17:55 WARN InstanceBuilder$NativeBLAS: Failed to load implementation from:dev.ludovic.netlib.blas.JNIBLAS\n23/11/13 16:17:55 WARN InstanceBuilder$NativeBLAS: Failed to load implementation from:dev.ludovic.netlib.blas.ForeignLinkerBLAS\n"
+        }
+      ],
+      "execution_count": 17,
+      "metadata": {
+        "tags": []
+      },
+      "id": "3c06c282-9a0e-40ff-93c8-bac3ad83bf21"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Now df_with_embeddings will have a new column \"embeddings\" with Word2Vec embeddings\n",
+        "df_with_embeddings.select(\"subreddit\", \"selftext\", \"embeddings\").show()\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "[Stage 18:===========================================>              (3 + 1) / 4]\r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "+------------+--------------------+--------------------+\n|   subreddit|            selftext|          embeddings|\n+------------+--------------------+--------------------+\n|     finance|This is your safe...|[-0.0010451586257...|\n|     finance|This is your safe...|[-0.0010451586257...|\n|Conservative|If you re a resid...|[-0.0011812509759...|\n|Conservative|Biden is expected...|[-0.0018011155347...|\n|Conservative|I have a family m...|[-4.5234596554008...|\n|     finance|This is your safe...|[-0.0010451586257...|\n|Conservative|I m writing an in...|[-0.0010573752661...|\n|Conservative|Inverse  Scientis...|[-0.0011679093748...|\n|     finance|This is your safe...|[-0.0010451586257...|\n|Conservative|Seriously  What t...|[-0.0014898275501...|\n+------------+--------------------+--------------------+\n\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 18,
+      "metadata": {
+        "tags": []
+      },
+      "id": "eff6df58-9ee3-4c99-943a-118774b3e1e2"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "pandas_df_with_embeddings = df_with_embeddings.toPandas()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 19,
+      "metadata": {
+        "tags": []
+      },
+      "id": "e14b579f-16ff-4302-8ebd-20a695bc64f2"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "pandas_df_with_embeddings.to_csv(\"sample_embeddings.csv\")"
+      ],
+      "outputs": [],
+      "execution_count": 35,
+      "metadata": {
+        "tags": []
+      },
+      "id": "61fc887a-5650-46f1-ac8e-86dcff7962ef"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Embedding all the data"
+      ],
+      "metadata": {},
+      "id": "f2580323-67c5-4c76-8a71-3d5205939aef"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_filtered.count()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "execute_result",
+          "execution_count": 37,
+          "data": {
+            "text/plain": "1566"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 37,
+      "metadata": {
+        "tags": []
+      },
+      "id": "cd89b74b-3381-470c-b1fb-f38f3b7bd38c"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Joining all the dataframes \n",
+        "\n",
+        "combined_df = (df_submissions_centrist_liberterian\n",
+        "               .union(df_submissions_socialism_economics)\n",
+        "               .union(df_submissions_conservative_finance)\n",
+        "               .union(df_submissions_askpol_cmv))\n",
+        "\n",
+        "combined_df.count()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "execute_result",
+          "execution_count": 20,
+          "data": {
+            "text/plain": "599908"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 20,
+      "metadata": {
+        "tags": []
+      },
+      "id": "75b76f5a-37c0-4ccf-a99e-96599fc18bc9"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "combined_df = combined_df.select(['subreddit','selftext'])\n",
+        "\n",
+        "\n",
+        "cleaned_combined_df = combined_df[\n",
+        "    ~combined_df['selftext'].isin(['', '[deleted]', '[removed]'])\n",
+        "]\n",
+        "\n",
+        "\n",
+        "cleaned_combined_df.show(5)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "[Stage 27:>                                                         (0 + 1) / 1]\r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "+-----------+--------------------+\n|  subreddit|            selftext|\n+-----------+--------------------+\n|Libertarian| Fookin libertarians|\n|Libertarian|I personally beli...|\n|Libertarian|[https://www.vox....|\n|Libertarian|It is likely that...|\n|Libertarian|Libertarian: an a...|\n+-----------+--------------------+\nonly showing top 5 rows\n\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 21,
+      "metadata": {
+        "tags": []
+      },
+      "id": "c332bdf5-95c2-4b73-8d16-bd03f487d17f"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cleaned_combined_df.count()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "execute_result",
+          "execution_count": 22,
+          "data": {
+            "text/plain": "39767"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 22,
+      "metadata": {
+        "tags": []
+      },
+      "id": "1459437f-9f1e-4a0f-be30-66bbf64ef2d1"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cleaned_combined_df.show(5)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "+-----------+--------------------+\n|  subreddit|            selftext|\n+-----------+--------------------+\n|Libertarian| Fookin libertarians|\n|Libertarian|I personally beli...|\n|Libertarian|[https://www.vox....|\n|Libertarian|It is likely that...|\n|Libertarian|Libertarian: an a...|\n+-----------+--------------------+\nonly showing top 5 rows\n\n"
+        }
+      ],
+      "execution_count": 23,
+      "metadata": {
+        "tags": []
+      },
+      "id": "92ec156f-2d31-4b2a-a576-b1d33dde8dba"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# S3 directory path\n",
+        "s3_directory = f\"s3a://{bucket}/project/cleaned/\"\n",
+        "\n",
+        "# Write the DataFrame to S3\n",
+        "cleaned_combined_df.write.format(\"parquet\").save(s3_directory + \"combined_submissions\")\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 25,
+      "metadata": {
+        "tags": []
+      },
+      "id": "00ad3aa2-796b-4f5a-a711-c35063884d26"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Read in Combined Data from S3"
+      ],
+      "metadata": {},
+      "id": "7ba617fb-5a2e-423d-9876-a975c2d49ec2"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "s3_directory = f\"s3a://{bucket}/project/cleaned/\"\n",
+        "\n",
+        "# Read the DataFrame from S3\n",
+        "cleaned_combined_df = spark.read.format(\"parquet\").load(s3_directory + \"combined_submissions\")"
+      ],
+      "outputs": [],
+      "execution_count": 10,
+      "metadata": {
+        "tags": []
+      },
+      "id": "aadbce1d-1866-41ca-87d7-a1ef80289aa7"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cleaned_combined_df.count()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "execute_result",
+          "execution_count": 8,
+          "data": {
+            "text/plain": "39767"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 8,
+      "metadata": {
+        "tags": []
+      },
+      "id": "96751cf3-ab86-40d5-b366-d4d1769f900e"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cleaned_combined_df.show()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "+------------+--------------------+\n|   subreddit|            selftext|\n+------------+--------------------+\n|Ask_Politics|I did a quick sea...|\n|Ask_Politics|Hello, I have a q...|\n|changemyview|I keep reading an...|\n|changemyview|I am a Marxist, a...|\n|changemyview|Exceptions of cou...|\n|changemyview|Disclaimer: This ...|\n|changemyview|\\n\\nI love histor...|\n|changemyview|So, a bit of a ba...|\n|changemyview|Putting up securi...|\n|changemyview|Video games have ...|\n|changemyview|Before I begin, I...|\n|changemyview|&gt; A quick pref...|\n|changemyview|As the internet h...|\n|changemyview|Everybody likes t...|\n|Ask_Politics|Say Democrats wer...|\n|changemyview|I understand hiki...|\n|changemyview|I can't think of ...|\n|changemyview|In this scenario ...|\n|Ask_Politics|In 2020, it was r...|\n|changemyview|I understand that...|\n+------------+--------------------+\nonly showing top 20 rows\n\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 15,
+      "metadata": {
+        "tags": []
+      },
+      "id": "3a60e559-f66e-4781-a3fc-a2a80baca261"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x = cleaned_combined_df.limit(5)"
+      ],
+      "outputs": [],
+      "execution_count": 22,
+      "metadata": {
+        "tags": []
+      },
+      "id": "2c6ce9cc-e349-4da8-b45b-95d3d414bec8"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyspark.sql import SparkSession\n",
+        "from pyspark.ml.feature import Tokenizer, Word2Vec\n",
+        "from pyspark.sql.functions import monotonically_increasing_id\n",
+        "from pyspark.ml.linalg import VectorUDT\n",
+        "from pyspark.sql.types import StructType, StructField\n",
+        "\n",
+        "# Initialize Spark session\n",
+        "spark = SparkSession.builder.appName(\"word2vec_application\").getOrCreate()\n",
+        "\n",
+        "# Assuming 'cleaned_combined_df' is your existing Spark DataFrame\n",
+        "df_with_id = cleaned_combined_df.withColumn(\"id\", monotonically_increasing_id())\n",
+        "\n",
+        "# Determine the batch size\n",
+        "batch_size = 100\n",
+        "\n",
+        "# Calculate the number of batches needed\n",
+        "num_rows = df_with_id.count()\n",
+        "num_batches = (num_rows + batch_size - 1) // batch_size\n",
+        "\n",
+        "# Tokenize the text in the 'selftext' column\n",
+        "tokenizer = Tokenizer(inputCol=\"selftext\", outputCol=\"words\")\n",
+        "tokenized_df = tokenizer.transform(df_with_id)\n",
+        "\n",
+        "# Define the schema for the result DataFrame including the 'features' column\n",
+        "result_schema = StructType(tokenized_df.schema.fields + [StructField(\"features\", VectorUDT(), True)])\n",
+        "\n",
+        "# Initialize an empty DataFrame to store results\n",
+        "result_df = spark.createDataFrame([], result_schema)\n",
+        "\n",
+        "# Process each batch\n",
+        "for i in range(num_batches):\n",
+        "    # Extract the batch\n",
+        "    start_id = i * batch_size\n",
+        "    end_id = start_id + batch_size\n",
+        "    batch_df = tokenized_df.filter((tokenized_df.id >= start_id) & (tokenized_df.id < end_id))\n",
+        "\n",
+        "    # Apply Word2Vec on the batch\n",
+        "    word2Vec = Word2Vec(vectorSize=100, minCount=0, inputCol=\"words\", outputCol=\"features\")\n",
+        "    model = word2Vec.fit(batch_df)\n",
+        "    batch_result = model.transform(batch_df)\n",
+        "\n",
+        "    # Append the processed batch to the result DataFrame\n",
+        "    result_df = result_df.union(batch_result)\n",
+        "\n",
+        "# Drop the temporary 'id' column\n",
+        "final_result_df = result_df.drop(\"id\")\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "[Stage 16:=============================>                            (1 + 1) / 2]\r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "23/11/13 19:05:19 WARN InstanceBuilder$NativeBLAS: Failed to load implementation from:dev.ludovic.netlib.blas.JNIBLAS\n23/11/13 19:05:19 WARN InstanceBuilder$NativeBLAS: Failed to load implementation from:dev.ludovic.netlib.blas.ForeignLinkerBLAS\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "error",
+          "ename": "IllegalArgumentException",
+          "evalue": "requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mIllegalArgumentException\u001b[0m                  Traceback (most recent call last)",
+            "Cell \u001b[0;32mIn[12], line 39\u001b[0m\n\u001b[1;32m     37\u001b[0m \u001b[38;5;66;03m# Apply Word2Vec on the batch\u001b[39;00m\n\u001b[1;32m     38\u001b[0m word2Vec \u001b[38;5;241m=\u001b[39m Word2Vec(vectorSize\u001b[38;5;241m=\u001b[39m\u001b[38;5;241m100\u001b[39m, minCount\u001b[38;5;241m=\u001b[39m\u001b[38;5;241m0\u001b[39m, inputCol\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mwords\u001b[39m\u001b[38;5;124m\"\u001b[39m, outputCol\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mfeatures\u001b[39m\u001b[38;5;124m\"\u001b[39m)\n\u001b[0;32m---> 39\u001b[0m model \u001b[38;5;241m=\u001b[39m \u001b[43mword2Vec\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mfit\u001b[49m\u001b[43m(\u001b[49m\u001b[43mbatch_df\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m     40\u001b[0m batch_result \u001b[38;5;241m=\u001b[39m model\u001b[38;5;241m.\u001b[39mtransform(batch_df)\n\u001b[1;32m     42\u001b[0m \u001b[38;5;66;03m# Append the processed batch to the result DataFrame\u001b[39;00m\n",
+            "File \u001b[0;32m/opt/conda/lib/python3.10/site-packages/pyspark/ml/base.py:205\u001b[0m, in \u001b[0;36mEstimator.fit\u001b[0;34m(self, dataset, params)\u001b[0m\n\u001b[1;32m    203\u001b[0m         \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mcopy(params)\u001b[38;5;241m.\u001b[39m_fit(dataset)\n\u001b[1;32m    204\u001b[0m     \u001b[38;5;28;01melse\u001b[39;00m:\n\u001b[0;32m--> 205\u001b[0m         \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_fit\u001b[49m\u001b[43m(\u001b[49m\u001b[43mdataset\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m    206\u001b[0m \u001b[38;5;28;01melse\u001b[39;00m:\n\u001b[1;32m    207\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mTypeError\u001b[39;00m(\n\u001b[1;32m    208\u001b[0m         \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mParams must be either a param map or a list/tuple of param maps, \u001b[39m\u001b[38;5;124m\"\u001b[39m\n\u001b[1;32m    209\u001b[0m         \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mbut got \u001b[39m\u001b[38;5;132;01m%s\u001b[39;00m\u001b[38;5;124m.\u001b[39m\u001b[38;5;124m\"\u001b[39m \u001b[38;5;241m%\u001b[39m \u001b[38;5;28mtype\u001b[39m(params)\n\u001b[1;32m    210\u001b[0m     )\n",
+            "File \u001b[0;32m/opt/conda/lib/python3.10/site-packages/pyspark/ml/wrapper.py:379\u001b[0m, in \u001b[0;36mJavaEstimator._fit\u001b[0;34m(self, dataset)\u001b[0m\n\u001b[1;32m    378\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21m_fit\u001b[39m(\u001b[38;5;28mself\u001b[39m, dataset: DataFrame) \u001b[38;5;241m-\u001b[39m\u001b[38;5;241m>\u001b[39m JM:\n\u001b[0;32m--> 379\u001b[0m     java_model \u001b[38;5;241m=\u001b[39m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_fit_java\u001b[49m\u001b[43m(\u001b[49m\u001b[43mdataset\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m    380\u001b[0m     model \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_create_model(java_model)\n\u001b[1;32m    381\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_copyValues(model)\n",
+            "File \u001b[0;32m/opt/conda/lib/python3.10/site-packages/pyspark/ml/wrapper.py:376\u001b[0m, in \u001b[0;36mJavaEstimator._fit_java\u001b[0;34m(self, dataset)\u001b[0m\n\u001b[1;32m    373\u001b[0m \u001b[38;5;28;01massert\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_java_obj \u001b[38;5;129;01mis\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m\n\u001b[1;32m    375\u001b[0m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_transfer_params_to_java()\n\u001b[0;32m--> 376\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_java_obj\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mfit\u001b[49m\u001b[43m(\u001b[49m\u001b[43mdataset\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_jdf\u001b[49m\u001b[43m)\u001b[49m\n",
+            "File \u001b[0;32m/opt/conda/lib/python3.10/site-packages/py4j/java_gateway.py:1321\u001b[0m, in \u001b[0;36mJavaMember.__call__\u001b[0;34m(self, *args)\u001b[0m\n\u001b[1;32m   1315\u001b[0m command \u001b[38;5;241m=\u001b[39m proto\u001b[38;5;241m.\u001b[39mCALL_COMMAND_NAME \u001b[38;5;241m+\u001b[39m\\\n\u001b[1;32m   1316\u001b[0m     \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mcommand_header \u001b[38;5;241m+\u001b[39m\\\n\u001b[1;32m   1317\u001b[0m     args_command \u001b[38;5;241m+\u001b[39m\\\n\u001b[1;32m   1318\u001b[0m     proto\u001b[38;5;241m.\u001b[39mEND_COMMAND_PART\n\u001b[1;32m   1320\u001b[0m answer \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mgateway_client\u001b[38;5;241m.\u001b[39msend_command(command)\n\u001b[0;32m-> 1321\u001b[0m return_value \u001b[38;5;241m=\u001b[39m \u001b[43mget_return_value\u001b[49m\u001b[43m(\u001b[49m\n\u001b[1;32m   1322\u001b[0m \u001b[43m    \u001b[49m\u001b[43manswer\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mgateway_client\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mtarget_id\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mname\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m   1324\u001b[0m \u001b[38;5;28;01mfor\u001b[39;00m temp_arg \u001b[38;5;129;01min\u001b[39;00m temp_args:\n\u001b[1;32m   1325\u001b[0m     temp_arg\u001b[38;5;241m.\u001b[39m_detach()\n",
+            "File \u001b[0;32m/opt/conda/lib/python3.10/site-packages/pyspark/sql/utils.py:196\u001b[0m, in \u001b[0;36mcapture_sql_exception.<locals>.deco\u001b[0;34m(*a, **kw)\u001b[0m\n\u001b[1;32m    192\u001b[0m converted \u001b[38;5;241m=\u001b[39m convert_exception(e\u001b[38;5;241m.\u001b[39mjava_exception)\n\u001b[1;32m    193\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(converted, UnknownException):\n\u001b[1;32m    194\u001b[0m     \u001b[38;5;66;03m# Hide where the exception came from that shows a non-Pythonic\u001b[39;00m\n\u001b[1;32m    195\u001b[0m     \u001b[38;5;66;03m# JVM exception message.\u001b[39;00m\n\u001b[0;32m--> 196\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m converted \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m\n\u001b[1;32m    197\u001b[0m \u001b[38;5;28;01melse\u001b[39;00m:\n\u001b[1;32m    198\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m\n",
+            "\u001b[0;31mIllegalArgumentException\u001b[0m: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences."
+          ]
+        }
+      ],
+      "execution_count": 12,
+      "metadata": {
+        "tags": []
+      },
+      "id": "1293d1bf-1d09-44a4-ac53-53c7c23062ba"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "result_df.count()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "23/11/13 19:38:49 WARN DAGScheduler: Broadcasting large task binary with size 1431.7 KiB\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "execute_result",
+          "execution_count": 14,
+          "data": {
+            "text/plain": "31941"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 14,
+      "metadata": {
+        "tags": []
+      },
+      "id": "ecef1181-2cc9-422e-8f65-4102f6bcc8a7"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyspark.sql.utils import IllegalArgumentException\n",
+        "\n",
+        "processed_records = 31941\n",
+        "start_batch_num = processed_records // batch_size\n",
+        "\n",
+        "for i in range(start_batch_num, num_batches):\n",
+        "    try:\n",
+        "        # Extract the batch\n",
+        "        start_id = i * batch_size\n",
+        "        end_id = start_id + batch_size\n",
+        "        batch_df = tokenized_df.filter((tokenized_df.id >= start_id) & (tokenized_df.id < end_id))\n",
+        "\n",
+        "        # Apply Word2Vec on the batch\n",
+        "        word2Vec = Word2Vec(vectorSize=100, minCount=0, inputCol=\"words\", outputCol=\"features\")\n",
+        "        model = word2Vec.fit(batch_df)\n",
+        "        batch_result = model.transform(batch_df)\n",
+        "\n",
+        "        # Append the processed batch to the result DataFrame\n",
+        "        result_df = result_df.union(batch_result)\n",
+        "    except IllegalArgumentException as e:\n",
+        "        print(f\"Skipping batch {i} due to error: {e}\")\n",
+        "\n",
+        "# Drop the temporary 'id' column\n",
+        "final_result_df = result_df.drop(\"id\")\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 320 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 321 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 322 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 323 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 324 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 325 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 326 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 327 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 328 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 329 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 330 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 331 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 332 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 333 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 334 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 335 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 336 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 337 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 338 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 339 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 340 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 341 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 342 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 343 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 344 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 345 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 346 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 347 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 348 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 349 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 350 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 351 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 352 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 353 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 354 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 355 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 356 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 357 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 358 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 359 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 360 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 361 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 362 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 363 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 364 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 365 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 366 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 367 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 368 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 369 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 370 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 371 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 372 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 373 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 374 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 375 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 376 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 377 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 378 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 379 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 380 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 381 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 382 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 383 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 384 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 385 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 386 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 387 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 388 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 389 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 390 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 391 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 392 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 393 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 394 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 395 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 396 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "[Stage 1780:============================>                           (1 + 1) / 2]\r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "Skipping batch 397 due to error: requirement failed: The vocabulary size should be > 0. You may need to check the setting of minCount, which could be large enough to remove all your words in sentences.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 15,
+      "metadata": {
+        "tags": []
+      },
+      "id": "c29776b2-01ba-44a5-a632-d53fd19c192b"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "final_result_df.show()"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "23/11/13 19:57:07 WARN DAGScheduler: Broadcasting large task binary with size 4.3 MiB\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "23/11/13 19:57:08 WARN DAGScheduler: Broadcasting large task binary with size 4.3 MiB\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "[Stage 1783:==========================================>             (3 + 1) / 4]\r"
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "+------------+--------------------+--------------------+--------------------+\n|   subreddit|            selftext|               words|            features|\n+------------+--------------------+--------------------+--------------------+\n|Ask_Politics|I did a quick sea...|[i, did, a, quick...|[0.01834424620681...|\n|Ask_Politics|Hello, I have a q...|[hello,, i, have,...|[0.01549940554369...|\n|changemyview|I keep reading an...|[i, keep, reading...|[0.01631413909206...|\n|changemyview|I am a Marxist, a...|[i, am, a, marxis...|[0.01836980200796...|\n|changemyview|Exceptions of cou...|[exceptions, of, ...|[0.01382255466482...|\n|changemyview|Disclaimer: This ...|[disclaimer:, thi...|[0.01601292483145...|\n|changemyview|\\n\\nI love histor...|[, , i, love, his...|[0.02111907340269...|\n|changemyview|So, a bit of a ba...|[so,, a, bit, of,...|[0.01819114568346...|\n|changemyview|Putting up securi...|[putting, up, sec...|[0.01465115683626...|\n|changemyview|Video games have ...|[video, games, ha...|[0.01793122022902...|\n|changemyview|Before I begin, I...|[before, i, begin...|[0.01560156286073...|\n|changemyview|&gt; A quick pref...|[&gt;, a, quick, ...|[0.02016185434857...|\n|changemyview|As the internet h...|[as, the, interne...|[0.01749424529527...|\n|changemyview|Everybody likes t...|[everybody, likes...|[0.01630180108126...|\n|Ask_Politics|Say Democrats wer...|[say, democrats, ...|[0.01310052789922...|\n|changemyview|I understand hiki...|[i, understand, h...|[0.01850360334671...|\n|changemyview|I can't think of ...|[i, can't, think,...|[0.01981766582568...|\n|changemyview|In this scenario ...|[in, this, scenar...|[0.01320953082029...|\n|Ask_Politics|In 2020, it was r...|[in, 2020,, it, w...|[0.01586704782381...|\n|changemyview|I understand that...|[i, understand, t...|[0.02174156392714...|\n+------------+--------------------+--------------------+--------------------+\nonly showing top 20 rows\n\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 17,
+      "metadata": {
+        "tags": []
+      },
+      "id": "58259f19-bc29-47f7-a37f-91f229fb76e8"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "s3_directory = f\"s3a://{bucket}/project/cleaned/\"\n",
+        "\n",
+        "# Write the DataFrame to S3\n",
+        "result_df.write.format(\"parquet\").save(s3_directory + \"embedded_submissions\")"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "23/11/13 20:00:30 WARN DAGScheduler: Broadcasting large task binary with size 5.4 MiB\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 18,
+      "metadata": {
+        "tags": []
+      },
+      "id": "b50b4688-b389-486c-9c72-81002b2b9fca"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Assuming 'result_df' is your Spark DataFrame\n",
+        "pandas_df = result_df.toPandas()\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "23/11/13 20:21:40 WARN DAGScheduler: Broadcasting large task binary with size 5.2 MiB\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 19,
+      "metadata": {
+        "tags": []
+      },
+      "id": "a5881eab-e950-4c1b-a69b-f4231cb9b22a"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Save Word2Vec model for later use"
+      ],
+      "metadata": {},
+      "id": "91c0434d-4ac4-4770-84b5-18a999b91afd"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model_path = \"models/my_word2vec_model\"\n",
+        "model.save(model_path)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "                                                                                \r"
+        }
+      ],
+      "execution_count": 24,
+      "metadata": {
+        "tags": []
+      },
+      "id": "49fc41d9-b6cf-425a-bdc5-85b73b82dfd4"
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "outputs": [],
+      "execution_count": null,
+      "metadata": {},
+      "id": "5c5d6dfc-f5d7-4c1c-95eb-870d1dcaeff9"
+    }
+  ],
+  "metadata": {
+    "availableInstances": [
+      {
+        "_defaultOrder": 0,
+        "_isFastLaunch": true,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 4,
+        "name": "ml.t3.medium",
+        "vcpuNum": 2
+      },
+      {
+        "_defaultOrder": 1,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 8,
+        "name": "ml.t3.large",
+        "vcpuNum": 2
+      },
+      {
+        "_defaultOrder": 2,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 16,
+        "name": "ml.t3.xlarge",
+        "vcpuNum": 4
+      },
+      {
+        "_defaultOrder": 3,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 32,
+        "name": "ml.t3.2xlarge",
+        "vcpuNum": 8
+      },
+      {
+        "_defaultOrder": 4,
+        "_isFastLaunch": true,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 8,
+        "name": "ml.m5.large",
+        "vcpuNum": 2
+      },
+      {
+        "_defaultOrder": 5,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 16,
+        "name": "ml.m5.xlarge",
+        "vcpuNum": 4
+      },
+      {
+        "_defaultOrder": 6,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 32,
+        "name": "ml.m5.2xlarge",
+        "vcpuNum": 8
+      },
+      {
+        "_defaultOrder": 7,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 64,
+        "name": "ml.m5.4xlarge",
+        "vcpuNum": 16
+      },
+      {
+        "_defaultOrder": 8,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 128,
+        "name": "ml.m5.8xlarge",
+        "vcpuNum": 32
+      },
+      {
+        "_defaultOrder": 9,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 192,
+        "name": "ml.m5.12xlarge",
+        "vcpuNum": 48
+      },
+      {
+        "_defaultOrder": 10,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 256,
+        "name": "ml.m5.16xlarge",
+        "vcpuNum": 64
+      },
+      {
+        "_defaultOrder": 11,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 384,
+        "name": "ml.m5.24xlarge",
+        "vcpuNum": 96
+      },
+      {
+        "_defaultOrder": 12,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 8,
+        "name": "ml.m5d.large",
+        "vcpuNum": 2
+      },
+      {
+        "_defaultOrder": 13,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 16,
+        "name": "ml.m5d.xlarge",
+        "vcpuNum": 4
+      },
+      {
+        "_defaultOrder": 14,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 32,
+        "name": "ml.m5d.2xlarge",
+        "vcpuNum": 8
+      },
+      {
+        "_defaultOrder": 15,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 64,
+        "name": "ml.m5d.4xlarge",
+        "vcpuNum": 16
+      },
+      {
+        "_defaultOrder": 16,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 128,
+        "name": "ml.m5d.8xlarge",
+        "vcpuNum": 32
+      },
+      {
+        "_defaultOrder": 17,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 192,
+        "name": "ml.m5d.12xlarge",
+        "vcpuNum": 48
+      },
+      {
+        "_defaultOrder": 18,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 256,
+        "name": "ml.m5d.16xlarge",
+        "vcpuNum": 64
+      },
+      {
+        "_defaultOrder": 19,
+        "_isFastLaunch": false,
+        "category": "General purpose",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 384,
+        "name": "ml.m5d.24xlarge",
+        "vcpuNum": 96
+      },
+      {
+        "name": "ml.geospatial.interactive",
+        "_defaultOrder": 20,
+        "hideHardwareSpecs": true,
+        "vcpuNum": 0,
+        "_isFastLaunch": false,
+        "gpuNum": 0,
+        "supportedImageNames": [
+          "sagemaker-geospatial-v1-0"
+        ],
+        "category": "General purpose",
+        "memoryGiB": 0
+      },
+      {
+        "_defaultOrder": 21,
+        "_isFastLaunch": true,
+        "category": "Compute optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 4,
+        "name": "ml.c5.large",
+        "vcpuNum": 2
+      },
+      {
+        "_defaultOrder": 22,
+        "_isFastLaunch": false,
+        "category": "Compute optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 8,
+        "name": "ml.c5.xlarge",
+        "vcpuNum": 4
+      },
+      {
+        "_defaultOrder": 23,
+        "_isFastLaunch": false,
+        "category": "Compute optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 16,
+        "name": "ml.c5.2xlarge",
+        "vcpuNum": 8
+      },
+      {
+        "_defaultOrder": 24,
+        "_isFastLaunch": false,
+        "category": "Compute optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 32,
+        "name": "ml.c5.4xlarge",
+        "vcpuNum": 16
+      },
+      {
+        "_defaultOrder": 25,
+        "_isFastLaunch": false,
+        "category": "Compute optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 72,
+        "name": "ml.c5.9xlarge",
+        "vcpuNum": 36
+      },
+      {
+        "_defaultOrder": 26,
+        "_isFastLaunch": false,
+        "category": "Compute optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 96,
+        "name": "ml.c5.12xlarge",
+        "vcpuNum": 48
+      },
+      {
+        "_defaultOrder": 27,
+        "_isFastLaunch": false,
+        "category": "Compute optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 144,
+        "name": "ml.c5.18xlarge",
+        "vcpuNum": 72
+      },
+      {
+        "_defaultOrder": 28,
+        "_isFastLaunch": false,
+        "category": "Compute optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 192,
+        "name": "ml.c5.24xlarge",
+        "vcpuNum": 96
+      },
+      {
+        "_defaultOrder": 29,
+        "_isFastLaunch": true,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 16,
+        "name": "ml.g4dn.xlarge",
+        "vcpuNum": 4
+      },
+      {
+        "_defaultOrder": 30,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 32,
+        "name": "ml.g4dn.2xlarge",
+        "vcpuNum": 8
+      },
+      {
+        "_defaultOrder": 31,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 64,
+        "name": "ml.g4dn.4xlarge",
+        "vcpuNum": 16
+      },
+      {
+        "_defaultOrder": 32,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 128,
+        "name": "ml.g4dn.8xlarge",
+        "vcpuNum": 32
+      },
+      {
+        "_defaultOrder": 33,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 4,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 192,
+        "name": "ml.g4dn.12xlarge",
+        "vcpuNum": 48
+      },
+      {
+        "_defaultOrder": 34,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 256,
+        "name": "ml.g4dn.16xlarge",
+        "vcpuNum": 64
+      },
+      {
+        "_defaultOrder": 35,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 61,
+        "name": "ml.p3.2xlarge",
+        "vcpuNum": 8
+      },
+      {
+        "_defaultOrder": 36,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 4,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 244,
+        "name": "ml.p3.8xlarge",
+        "vcpuNum": 32
+      },
+      {
+        "_defaultOrder": 37,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 8,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 488,
+        "name": "ml.p3.16xlarge",
+        "vcpuNum": 64
+      },
+      {
+        "_defaultOrder": 38,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 8,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 768,
+        "name": "ml.p3dn.24xlarge",
+        "vcpuNum": 96
+      },
+      {
+        "_defaultOrder": 39,
+        "_isFastLaunch": false,
+        "category": "Memory Optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 16,
+        "name": "ml.r5.large",
+        "vcpuNum": 2
+      },
+      {
+        "_defaultOrder": 40,
+        "_isFastLaunch": false,
+        "category": "Memory Optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 32,
+        "name": "ml.r5.xlarge",
+        "vcpuNum": 4
+      },
+      {
+        "_defaultOrder": 41,
+        "_isFastLaunch": false,
+        "category": "Memory Optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 64,
+        "name": "ml.r5.2xlarge",
+        "vcpuNum": 8
+      },
+      {
+        "_defaultOrder": 42,
+        "_isFastLaunch": false,
+        "category": "Memory Optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 128,
+        "name": "ml.r5.4xlarge",
+        "vcpuNum": 16
+      },
+      {
+        "_defaultOrder": 43,
+        "_isFastLaunch": false,
+        "category": "Memory Optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 256,
+        "name": "ml.r5.8xlarge",
+        "vcpuNum": 32
+      },
+      {
+        "_defaultOrder": 44,
+        "_isFastLaunch": false,
+        "category": "Memory Optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 384,
+        "name": "ml.r5.12xlarge",
+        "vcpuNum": 48
+      },
+      {
+        "_defaultOrder": 45,
+        "_isFastLaunch": false,
+        "category": "Memory Optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 512,
+        "name": "ml.r5.16xlarge",
+        "vcpuNum": 64
+      },
+      {
+        "_defaultOrder": 46,
+        "_isFastLaunch": false,
+        "category": "Memory Optimized",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 768,
+        "name": "ml.r5.24xlarge",
+        "vcpuNum": 96
+      },
+      {
+        "_defaultOrder": 47,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 16,
+        "name": "ml.g5.xlarge",
+        "vcpuNum": 4
+      },
+      {
+        "_defaultOrder": 48,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 32,
+        "name": "ml.g5.2xlarge",
+        "vcpuNum": 8
+      },
+      {
+        "_defaultOrder": 49,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 64,
+        "name": "ml.g5.4xlarge",
+        "vcpuNum": 16
+      },
+      {
+        "_defaultOrder": 50,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 128,
+        "name": "ml.g5.8xlarge",
+        "vcpuNum": 32
+      },
+      {
+        "_defaultOrder": 51,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 1,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 256,
+        "name": "ml.g5.16xlarge",
+        "vcpuNum": 64
+      },
+      {
+        "_defaultOrder": 52,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 4,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 192,
+        "name": "ml.g5.12xlarge",
+        "vcpuNum": 48
+      },
+      {
+        "_defaultOrder": 53,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 4,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 384,
+        "name": "ml.g5.24xlarge",
+        "vcpuNum": 96
+      },
+      {
+        "_defaultOrder": 54,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 8,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 768,
+        "name": "ml.g5.48xlarge",
+        "vcpuNum": 192
+      },
+      {
+        "_defaultOrder": 55,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 8,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 1152,
+        "name": "ml.p4d.24xlarge",
+        "vcpuNum": 96
+      },
+      {
+        "_defaultOrder": 56,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 8,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 1152,
+        "name": "ml.p4de.24xlarge",
+        "vcpuNum": 96
+      },
+      {
+        "_defaultOrder": 57,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 32,
+        "name": "ml.trn1.2xlarge",
+        "vcpuNum": 8
+      },
+      {
+        "_defaultOrder": 58,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 512,
+        "name": "ml.trn1.32xlarge",
+        "vcpuNum": 128
+      },
+      {
+        "_defaultOrder": 59,
+        "_isFastLaunch": false,
+        "category": "Accelerated computing",
+        "gpuNum": 0,
+        "hideHardwareSpecs": false,
+        "memoryGiB": 512,
+        "name": "ml.trn1n.32xlarge",
+        "vcpuNum": 128
+      }
+    ],
+    "instance_type": "ml.t3.large",
+    "kernelspec": {
+      "name": "synapse_pyspark",
+      "language": "Python",
+      "display_name": "Synapse PySpark"
+    },
+    "language_info": {
+      "name": "python",
+      "version": "3.8.0",
+      "mimetype": "text/x-python",
+      "file_extension": ".py",
+      "pygments_lexer": "ipython",
+      "codemirror_mode": "ipython",
+      "nbconvert_exporter": "python"
+    },
+    "microsoft": {
+      "ms_spell_check": {
+        "ms_spell_check_language": "en"
+      }
+    },
+    "kernel_info": {
+      "name": "synapse_pyspark"
+    },
+    "nteract": {
+      "version": "nteract-front-end@1.0.0"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

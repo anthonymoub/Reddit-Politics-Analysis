@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Group 1 Big Data Project – eda</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./nlp.html" rel="next">
+<link href="./business_goals.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./eda.html">Exploratory Data Analysis</a></li><li class="breadcrumb-item"><a href="./eda.html">EDA</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Politics &amp; Finance in the Age of Big Reddit Data</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./business_goals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Business Goals</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Exploratory Data Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">EDA</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Natural Language Processing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./nlp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NLP</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Machine Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Conclusion</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./discussion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Discussion</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Code</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+ <span class="menu-text">Data Gathering</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/fred.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">fred.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/AskPoltics_Changemyview.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">AskPoltics_Changemyview.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/centrist_liberterian.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">centrist_liberterian.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/convervative_finance.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">convervative_finance.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/data_gathering/socialism_economics_liberal.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">socialism_economics_liberal.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+ <span class="menu-text">Preprocessing</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/data_cleaning.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">data_cleaning.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/basic_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">basic_eda.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/sentiment_askpolitics_changemyview.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment_askpolitics_changemyview.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/sentiment_centrist_libertarian.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment_centrist_libertarian.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/sentiment_conservative_finance.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment_conservative_finance.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/sentiment_socialism_Economics_Liberal.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment_socialism_Economics_Liberal.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/preprocessing/controversial_processing.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">controversial_processing.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+ <span class="menu-text">EDA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/eda/anthony_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">anthony_eda.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/eda/eric_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">eric_eda.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/eda/raunak_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">raunak_eda.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/eda/tegveer_eda.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">tegveer_eda.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false">
+ <span class="menu-text">NLP</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/nlp/sentiment.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">sentiment.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/nlp/tegveer_nlp_aws.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">tegveer_nlp_aws.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/nlp/tegveer_nlp_azure.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">tegveer_nlp_azure.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+ <span class="menu-text">ML</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/ml/controversial_processing.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">controversial_processing.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/ml/controversial_classification.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">controversial_classification.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/ml/score_regression_raunak.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">score_regression_raunak.ipynb</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="././code/ml/clustering_subreddits.html" class="sidebar-item-text sidebar-link" target="&quot;_blank&quot;">
+ <span class="menu-text">clustering_subreddits.ipynb</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#eda" id="toc-eda" class="nav-link active" data-scroll-target="#eda">EDA</a>
+  <ul class="collapse">
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link" data-scroll-target="#executive-summary">Executive Summary</a></li>
+  <li><a href="#analysis-report" id="toc-analysis-report" class="nav-link" data-scroll-target="#analysis-report">Analysis Report</a>
+  <ul class="collapse">
+  <li><a href="#business-goal-1-determine-overall-and-distinct-user-frequency-trends-of-subreddit-posts-and-comments" id="toc-business-goal-1-determine-overall-and-distinct-user-frequency-trends-of-subreddit-posts-and-comments" class="nav-link" data-scroll-target="#business-goal-1-determine-overall-and-distinct-user-frequency-trends-of-subreddit-posts-and-comments">Business Goal #1: Determine overall and distinct user frequency trends of subreddit posts and comments</a></li>
+  <li><a href="#business-goal-2-gain-an-understanding-of-distinguished-gilded-and-controversial-posts-and-comments-among-all-subreddits-as-well-as-the-users-of-each-subreddit." id="toc-business-goal-2-gain-an-understanding-of-distinguished-gilded-and-controversial-posts-and-comments-among-all-subreddits-as-well-as-the-users-of-each-subreddit." class="nav-link" data-scroll-target="#business-goal-2-gain-an-understanding-of-distinguished-gilded-and-controversial-posts-and-comments-among-all-subreddits-as-well-as-the-users-of-each-subreddit.">Business Goal #2: Gain an understanding of distinguished, gilded, and controversial posts and comments among all subreddits as well as the users of each subreddit.</a></li>
+  <li><a href="#business-goal-3-determine-and-visualize-the-50-highest-scored-posts-across-political-subreddits." id="toc-business-goal-3-determine-and-visualize-the-50-highest-scored-posts-across-political-subreddits." class="nav-link" data-scroll-target="#business-goal-3-determine-and-visualize-the-50-highest-scored-posts-across-political-subreddits.">Business Goal #3: Determine and visualize the 50 highest scored posts across political subreddits.</a></li>
+  <li><a href="#business-goal-4-understand-the-temporal-effects-of-number-of-posts-across-political-subreddits" id="toc-business-goal-4-understand-the-temporal-effects-of-number-of-posts-across-political-subreddits" class="nav-link" data-scroll-target="#business-goal-4-understand-the-temporal-effects-of-number-of-posts-across-political-subreddits">Business Goal #4: Understand the temporal effects of number of posts across political subreddits</a></li>
+  <li><a href="#business-goal-5-shared-user-interaction-across-political-subreddits" id="toc-business-goal-5-shared-user-interaction-across-political-subreddits" class="nav-link" data-scroll-target="#business-goal-5-shared-user-interaction-across-political-subreddits">Business Goal #5: Shared user interaction across political subreddits</a></li>
+  <li><a href="#business-goal-6-measure-the-similarity-between-political-and-financemacroeconomic-topics-discussed-among-grouped-political-and-economics-subreddits" id="toc-business-goal-6-measure-the-similarity-between-political-and-financemacroeconomic-topics-discussed-among-grouped-political-and-economics-subreddits" class="nav-link" data-scroll-target="#business-goal-6-measure-the-similarity-between-political-and-financemacroeconomic-topics-discussed-among-grouped-political-and-economics-subreddits">Business Goal #6: Measure the similarity between political and finance/macroeconomic topics discussed among grouped political and economics subreddits</a></li>
+  <li><a href="#business-goal-7-explore-the-activity-of-reconomics-submissions-based-on-the-state-of-the-economy" id="toc-business-goal-7-explore-the-activity-of-reconomics-submissions-based-on-the-state-of-the-economy" class="nav-link" data-scroll-target="#business-goal-7-explore-the-activity-of-reconomics-submissions-based-on-the-state-of-the-economy">Business Goal #7: Explore the activity of <code>r/Economics</code> submissions based on the state of the economy</a></li>
+  </ul></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="eda" class="level1">
+<h1>EDA</h1>
+<section id="executive-summary" class="level2">
+<h2 class="anchored" data-anchor-id="executive-summary">Executive Summary</h2>
+<p>Our exploratory data analysis (EDA) on Reddit’s major political and economic subreddits has provided a nuanced view of online political discourse, offering valuable context for understanding user behavior. The analysis delved into various aspects of these online subreddit communities, shedding light on the dynamics of discussions and the interplay of user interests.</p>
+<p>Preliminary analysis unveiled that <code>r/Conservative</code> is the most active subreddit, with the highest number of posts and comments, while <code>r/AskPolitics</code> has the most distinct posts and comments, indicating a more diverse user base. The <code>r/Conservative</code> subreddit also has the highest average post score, suggesting that its content resonates strongly with its user base. The analysis also revealed that the <code>r/Conservative</code> subreddit has the most significant number of users in common with other political subreddits, indicating that these users engage in various political communities. Subreddits, such as <code>r/socialism</code> and <code>r/Liberal</code>, showcase consistent activity with fewer fluctuations across number of comments and submissions, suggesting a more stable user base.</p>
+<p>Additionally, weekly patterns of posting activity revealed that Thursdays are the most active days for posting across <code>r/Liberterian</code>, <code>r/socialism</code>, and <code>r/centrist</code> subreddits, with the exception of <code>r/Conservative</code>, which sees the highest activity on Wednesdays. The analysis also showed that posting activity generally decreases as the year progresses, with the lowest numbers appearing in December. The data also revealed that Saturdays and Sundays consistently have fewer posts than weekdays, in line with typical online engagement trends.</p>
+<p>Finally, we incorporated U.S GDP data from the <a href="https://pypi.org/project/fred/"><code>FRED</code> python package</a> from January 2021 to March 2023 to compare the economic data with the <code>r/Economics</code> subreddit posting activity. The analysis revealed that there is a relationship between the state of the economy and the level of engagement and sentiment on the <code>r/Economics</code> subreddit. During times of economic uncertainty, there is an increase in the number of submissions and a decrease in the average submission score. This suggests that people are more likely to turn to online communities to discuss and seek information about the economy during difficult times. Additionally, the types of posts that are upvoted during these times suggest that people are looking for content that resonates with their concerns and anxieties.</p>
+</section>
+<section id="analysis-report" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-report">Analysis Report</h2>
+<section id="business-goal-1-determine-overall-and-distinct-user-frequency-trends-of-subreddit-posts-and-comments" class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-1-determine-overall-and-distinct-user-frequency-trends-of-subreddit-posts-and-comments">Business Goal #1: Determine overall and distinct user frequency trends of subreddit posts and comments</h3>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Line-Charts/posts/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 1: Line Chart of number of posts (per subreddit)
+</figcaption>
+</figure>
+</center>
+<p>Figure 1 presents a line chart that tracks the posting activity across various political and economic subreddits from January 2021 to March 2023. The subreddit <code>r/Conservative</code> shows the most pronounced variability and has the highest peaks, suggesting periods of intense activity which might be attributed to specific political events or discussions that resonated strongly with its user base. It’s noteworthy that the peaks for <code>r/Conservative</code> sharply spike above all other subreddits, indicating that certain topics or times drove engagement significantly more than usual.</p>
+<p>In contrast, other subreddits such as <code>r/Economics</code>, <code>r/Finance</code>, and <code>r/ChangeMyView</code> maintain a relatively stable, low-level activity over time, with <code>Economics</code> occasionally showing slight increases that could correspond to economic events or policy discussions. Subreddits like <code>r/Liberal</code>, <code>r/socialism</code>, <code>r/Libertarian</code>, and <code>r/centrist</code> exhibit moderate activity with fewer fluctuations, reflecting a consistent level of engagement without the sharp spikes observed in the <code>r/Conservative</code> subreddit. The data suggests that while political subreddits can experience bursts of heightened activity, forums centered around economics and finance tend to have more steady, predictable participation rates.</p>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Line-Charts/comments/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 2: Line Chart of number of comments (per subreddit)
+</figcaption>
+</figure>
+</center>
+<p>Figure 2 tracks the volume of comments across various subreddits, highlighting how user interaction ebbs and flows over time. The “Conservative” subreddit shows the most pronounced fluctuations, with sharp spikes indicative of intense conversational bursts. The <code>r/Libertarian</code> subreddit also experiences notable, albeit less extreme, surges in activity, potentially aligning with key events or discussions. Other subreddits, including <code>r/Liberal</code>, <code>r/socialism</code>, and <code>r/centrist</code> present more consistent comment patterns, with occasional upticks that may correspond to specific events. The steady increase in the <code>r/Economics</code> subreddit comments towards the end of the timeline suggests growing engagement. This visualization reflects the dynamic nature of online discourse, with political forums often at the mercy of the news cycle, while more thematic forums like <code>r/Finance</code> or <code>r/Economics</code> maintain a steadier level of dialogue.</p>
+<p><strong>Note:</strong> Similar plots for distinct posts, comment counts, and distinct comments can be found in the appendix.</p>
+</section>
+<section id="business-goal-2-gain-an-understanding-of-distinguished-gilded-and-controversial-posts-and-comments-among-all-subreddits-as-well-as-the-users-of-each-subreddit." class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-2-gain-an-understanding-of-distinguished-gilded-and-controversial-posts-and-comments-among-all-subreddits-as-well-as-the-users-of-each-subreddit.">Business Goal #2: Gain an understanding of distinguished, gilded, and controversial posts and comments among all subreddits as well as the users of each subreddit.</h3>
+<p>The subreddits were ranked based on the counts of meaures that correspond with controversial posts and comments. As Figures 1 and 2 have shown already, there is greater number of posts and comments from the <code>r/Conservative</code> subreddit, so the counts shown in Table 1 have been normalized. Unsurprisingly, the <code>r/ChangeMyView</code> subreddit had the greatest number of distinguished posts and comments (being nearly 2 standard deviations from the mean), which may hint at heavy moderation, potentially as a result of touchy subjects being discussed. Ironically, the subreddits typically associated with the authoritarian left and right on the political compass (<code>r/socialism</code> and <code>r/Conservative</code>, respectively) have less distinguished submissions and posts that the libertarian left and right subreddits (<code>r/Liberal</code> and <code>r/Libertarian</code>, respectively), pointing to an ironic inversion from the expectations of subreddit moderation. Additionally, the <code>r/Conservative</code> subreddit had the greatest number of gilded posts and comments. This, at a glance, may seem like users incentivizing each other financially with the prospects of Reddit Gold, which would inevitably promote an echo chamber of ideas in an online political space; however, this doesn’t seem to be the case when considering that the subreddit also has the highest count of controversial comments (having a count of over 2 standard deviations from the mean). Instead, this may suggest that users on this subreddit are simply more willing to monetarily support posts and comments that they find appealing.</p>
+<center>
+<figure class="figure">
+
+<iframe src="https://anthonymoubarak.georgetown.domains/Tables/controversial_subreddit_normalized.html" width="800px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Table 1: Subreddits with the Most Number of Controversial Posts and Comments (Normalized)
+</figcaption>
+</figure>
+</center>
+<p>Next, we looked at individual users and ranked them based on the counts of measures that corerspond with controversial posts and comments. Based on the distinguished submissions and comments, we can see that among the top 20 controversial users, only one of them (user: “ultimis”) is a moderator. Another finding is that the top 20 users all come from the subreddits <code>r/centrist</code>, <code>r/Libertarian</code>, or <code>r/Conservative</code>. Much like the findings from Table 1, Table 2 also seems to suggest that these three political subreddits have a large amount of intra-subreddit discourse among their posts and comments.</p>
+<center>
+<figure class="figure">
+
+<iframe src="https://anthonymoubarak.georgetown.domains/Tables/controversial_user.html" width="850px" height="700px">
+</iframe>
+<figcaption class="figure-caption">
+Table 2: Top 20 Users with the Most Number of Controversial Posts and Comments
+</figcaption>
+</figure>
+</center>
+</section>
+<section id="business-goal-3-determine-and-visualize-the-50-highest-scored-posts-across-political-subreddits." class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-3-determine-and-visualize-the-50-highest-scored-posts-across-political-subreddits.">Business Goal #3: Determine and visualize the 50 highest scored posts across political subreddits.</h3>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Bubble-Chart/dist/index.html" width="900px" height="900px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 3: Bubble Chart showing the 50 highest scored posts per subreddit.
+</figcaption>
+</figure>
+</center>
+<p>Figure 3 is a bubble chart illustrating the average scores of the top 50 posts from various political subreddits, where the score is calculated by subtracting the number of downvotes from upvotes. The size of each subreddit’s bubble reflects the average score of its posts. The chart shows that the subreddit represented by the largest bubble has the highest average post score, while the smallest bubble corresponds to the subreddit with the lowest average score.</p>
+<p>The subreddit with the largest bubble (<code>r/Conservative</code>) has significantly outpaced the others in terms of average score, suggesting that posts in this community resonate strongly with its members and receive more upvotes. Conversely, the subreddit with the smallest bubble (<code>r/centrist</code>) has the lowest average scores, indicating either a smaller community, less engagement, or a tendency towards more divisive content that doesn’t amass as many upvotes.</p>
+<p>Within each of these larger subreddit bubbles are smaller bubbles, each representing an individual post; the title of the post is indicated within these smaller bubbles. Additionally, interacting with these smaller bubbles by clicking on them will redirect the viewer to the respective post’s link on Reddit for further exploration.</p>
+</section>
+<section id="business-goal-4-understand-the-temporal-effects-of-number-of-posts-across-political-subreddits" class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-4-understand-the-temporal-effects-of-number-of-posts-across-political-subreddits">Business Goal #4: Understand the temporal effects of number of posts across political subreddits</h3>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Calendar-Heatmaps/Conservative/dist/index.html" width="800px" height="500px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 4: Calendar Heatmap of r/Conservative Reddit Posts
+</figcaption>
+</figure>
+</center>
+<p>Figure 4 depicts the daily and monthly number of posts on the <code>r/Conservative</code> subreddit. There’s a clear trend of higher activity on weekdays, with Wednesdays being the peak, and lower activity on weekends, particularly on Sundays. The data indicates a seasonal trend, with post volumes generally higher in March and April and reducing towards the end of the year, in November and December. The color gradient emphasizes these variations, with darker hues representing more posts, allowing for a visual representation of user engagement on Reddit throughout the different months and days of the week.</p>
+<p><strong>Note:</strong> A calendar heatmap for different subreddits can be found in the appendix section.</p>
+</section>
+<section id="business-goal-5-shared-user-interaction-across-political-subreddits" class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-5-shared-user-interaction-across-political-subreddits">Business Goal #5: Shared user interaction across political subreddits</h3>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Dependency-wheel/dist/index.html" width="800px" height="600px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 5: Dependency Wheel of Users in different Subreddits
+</figcaption>
+</figure>
+</center>
+<p>The dependency wheel depicted in Figure 5 above provides a graphical representation of the shared user base between various political subreddits. The thickness of the connecting bands is directly proportional to the number of users that participate in both subreddits at each end of the band. A notable observation from the wheel is the significant interconnectivity between certain subreddits, which could suggest a shared ideological proximity or an interest overlap among their user bases. For instance, if there is a thick band between the subreddits labeled <code>r/Liberal</code> and <code>r/socialism</code>, this would indicate a large common audience, possibly due to similar political leanings or discussions that appeal to both groups.</p>
+<p>Additionally, the visualization reveals subreddits that serve as common grounds for diverse political discourse, such as <code>r/ChangeMyView</code> or <code>r/AskPolitics</code>, where the number of interlinking bands suggests a wide range of users from different political backgrounds converging for debate or inquiry. This could imply that these platforms are more neutral or open-ended, attracting a varied audience seeking to engage with multiple perspectives. The overall pattern highlights not only the segmentation within the political discourse on Reddit but also the points of intersection where cross-ideological conversations are occurring.</p>
+</section>
+<section id="business-goal-6-measure-the-similarity-between-political-and-financemacroeconomic-topics-discussed-among-grouped-political-and-economics-subreddits" class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-6-measure-the-similarity-between-political-and-financemacroeconomic-topics-discussed-among-grouped-political-and-economics-subreddits">Business Goal #6: Measure the similarity between political and finance/macroeconomic topics discussed among grouped political and economics subreddits</h3>
+<p>We present the Cosine and Jaccard similarity scores for posts’ bodies and titles across grouped political and economics subreddits. The political subreddits utilized for the two tables below are <code>r/Conservative</code>, <code>r/Socialism</code>, <code>r/centrist</code>, and <code>r/Libertarian</code> and the economic subreddits are <code>r/Finance</code> and <code>r/Economics</code>. Initially, we obtained the counts of three words, <code>[recession, inflation, and unemployment]</code>, for the grouped subreddits from regex patterns on the posts’ bodies and ran Cosine as well as Jaccard Similarity scores on the counts. The Cosine Similarity score between the grouped subreddits was 0.9 and Jaccard Similarity was 0.04, which meant that the two subreddits have similar distributions of words, even though the counts of individual words were significantly different. This finding culminated in two hypotheses, the first being that the <strong>grouped economic subreddits must be containing a large number of “shitposts”</strong>, probably related to cryptocurrencies and NFT’s, and the second one that <strong>economics subreddits posts’ bodies contain mainly links</strong> to online news articles with the key words present in the post titles. Consequently, we updated the word list to account for <code>[crypto, blockchain, nft]</code> words contained in these flippant posts and also ran the similarity algorithms on the posts’ titles.</p>
+<p>In addition to the economics word list, we also made a political word list to obtain grouped subreddit counts for the words <code>[trump, biden, election, fed, powell]</code> and ran the similarity algorithms on the posts’ bodies and titles. Its results and discussion are presented below.</p>
+<section id="post-body" class="level4">
+<h4 class="anchored" data-anchor-id="post-body">Post Body</h4>
+<p>
+<br>
+</p>
+<center>
+<figure class="figure">
+<div>
+
+<iframe src="https://anthonymoubarak.georgetown.domains/Tables/body_cosine_jaccard.html" width="400px" height="300px">
+</iframe>
+</div>
+<figcaption class="figure-caption">
+Table 3: Cosine and Jaccard Similarity of Post Body for combined Political and Economics subreddits
+</figcaption>
+</figure>
+</center>
+</section>
+<section id="post-title" class="level4">
+<h4 class="anchored" data-anchor-id="post-title">Post Title</h4>
+<p>
+<br>
+</p>
+<center>
+<figure class="figure">
+<div>
+<iframe src="https://anthonymoubarak.georgetown.domains/plots/title_cosine_jaccard.html" width="400px" height="300px">
+</iframe>
+</div>
+<figcaption class="figure-caption">
+Table 4: Cosine and Jaccard Similarity of Post Title for combined Political and Economics subreddits
+</figcaption>
+</figure>
+</center>
+<p>Table 4 supports our hyptheses, as we can see that the Jaccard Similarity score is highest across the post titles of the grouped subreddits when we filter for the economics word list. This means that the posts’ titles not only have a similar distribution of counts across the grouped subreddits but they also have similar raw counts for each individual word. This is because the posts’ titles contain the key words that we are looking for, while the posts’ bodies contain links to online news articles. On the other, political words in either the posts’ bodies or titles do not have a similar distribution of counts across the grouped subreddits, as shown in both Table 3 and Table 4.</p>
+</section>
+</section>
+<section id="business-goal-7-explore-the-activity-of-reconomics-submissions-based-on-the-state-of-the-economy" class="level3">
+<h3 class="anchored" data-anchor-id="business-goal-7-explore-the-activity-of-reconomics-submissions-based-on-the-state-of-the-economy">Business Goal #7: Explore the activity of <code>r/Economics</code> submissions based on the state of the economy</h3>
+<section id="gdp-vs-reconomics-submissions" class="level4">
+<h4 class="anchored" data-anchor-id="gdp-vs-reconomics-submissions">GDP vs <code>r/Economics</code> Submissions</h4>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/GDP_Numbers/dist/index.html" width="800px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 6: Number of <code>r/Economics</code> Submissions vs U.S Real GDP
+</figcaption>
+</figure>
+</center>
+<p>Figure 6 presents a comparative analysis of the United States’ Real Gross Domestic Product (GDP) against the number of submissions in the <code>r/Economics</code> subreddit over a period extending from January 2021 to March 2023. Evident in the plot, the submission count hovers around 1,000 posts per month, reflecting a steady engagement level within the subreddit community.</p>
+<p>A notable deviation occurs in July 2022, marked by an annotation that points out the release of news indicating the U.S economy’s contraction for two consecutive quarters, often considered a technical indicator of a recession. Following this announcement, there is a marked spike in subreddit activity in August and September 2022, with submissions surging to well over four times the usual number. This spike in activity suggests a heightened collective concern and a rush to discuss and understand the implications of the economic news</p>
+</section>
+<section id="gdp-vs-reconomics-submissions-scores" class="level4">
+<h4 class="anchored" data-anchor-id="gdp-vs-reconomics-submissions-scores">GDP vs <code>r/Economics</code> Submissions Scores</h4>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/GDP_Scores/dist/index.html" width="800px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Figure 7: Average Score of <code>r/Economics</code> Submissions vs U.S Real GDP
+</figcaption>
+</figure>
+</center>
+<p>Figure 7 again plots the United States’ Real Gross Domestic Product (GDP), but this time against the average submission score in the <code>r/Economics</code> subreddit over a period extending from January 2021 to March 2023. Conversely, this visualization reveals a stark drop in the average score of submissions during the same period of economic concern. This significant downturn in average score might also be interpreted as a barometer of public sentiment towards the economy, rather than simply a measure of post quality. In times of economic uncertainty, it’s common for sentiment to sour, and this shift is often reflected in the collective mood of discussions and the types of content that get upvoted. As the real GDP contracted for two consecutive quarters, the mood likely shifted from cautiously optimistic to more pessimistic and critical, leading to a preference for upvoting posts that resonate with the community’s concerns and anxieties. However, it is also worth noting that since the number of posts in that period also significantly increased, it is likely that lower post activity (comments/upvotes) could also have impacted the average score during that period.</p>
+</section>
+</section>
+</section>
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Line-Charts/distinct-posts/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Appendix 1: Line Chart of number of posts by distinct number of users (per subreddit)
+</figcaption>
+</figure>
+</center>
+<!--
+Figure 2 illustrates the variability of unique user participation across different subreddits over two years. `r/AskPolitics` stands out with a consistently high percentage of distinct posts, reflecting a broad and diverse user engagement. On the contrary, the `r/Conservative` subreddit demonstrates lower and fluctuating levels of distinct posts, suggesting a smaller group of users frequently contributing to discussions. Subreddits like `r/Liberal`, `r/socialism`, and `r/Libertarian` exhibit moderate variability, potentially influenced by political currents and events. `r/Finance` and `r/Economics` indicate a tendency towards a regular contributor base with fewer distinct users. These patterns provide a snapshot of the community dynamics within these subreddits, highlighting the differences in user diversity and engagement. -->
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Line-Charts/distinct-comments/dist/index.html" width="900px" height="450px">
+</iframe>
+<figcaption class="figure-caption">
+Appendix 2: Line Chart of number of comments by distinct number of users (per subreddit)
+</figcaption>
+</figure>
+</center>
+
+<!-- Figure 4 captures the comment activity trends by unique users across various subreddits over time, revealing the fluctuating levels of user engagement. The `r/Conservative` subreddit experiences the most substantial variations, with dramatic peaks suggesting periods of intense discussion among distinct users. The `r/Libertarian` subreddit also shows significant activity spikes, though these are more moderate in comparison, possibly reflecting the impact of particular events or debates that resonate with unique contributors. Subreddits such as `r/Liberal`, `r/socialism` and `r/centrist` display relatively stable levels of unique user comments, interspersed with slight rises potentially tied to specific topical triggers. In contrast, the `r/Economics` subreddit sees a gradual increase in comments by unique users as the timeline progresses, indicating a growing diversity in participant engagement. Overall, this figure illustrates the pulsating pattern of individual user participation across political and thematic subreddits, underscoring the ebb and flow of unique conversational contributions in these online communities. -->
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Calendar-Heatmaps/Liberterian/dist/index.html" width="800px" height="500px">
+</iframe>
+<figcaption class="figure-caption">
+Appendix 3: Calendar Heatmap of <code>r/Liberterian</code> Reddit Posts
+</figcaption>
+</figure>
+</center>
+<!-- Figure 7 depicts the daily and monthly number of posts on the `r/Liberterian` subreddit. Thursdays generally see the highest activity, particularly in the earlier months like January and February. Overall, the pattern shows a decrease in posting activity as the year progresses, with the lowest numbers appearing towards the end of the year in December. Saturdays and Sundays consistently show fewer posts than weekdays, in line with typical online engagement trends. -->
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Calendar-Heatmaps/Centrist/dist/index.html" width="800px" height="500px">
+</iframe>
+<figcaption class="figure-caption">
+Appendix 4: Calendar Heatmap of <code>r/centrist</code> Reddit Posts
+</figcaption>
+</figure>
+</center>
+<!-- Figure 8 illustrates the daily and monthly number of posts on a subreddit with a `r/centrist` perspective. Thursdays stand out as the most active day for posting, especially in the earlier part of the year, with January seeing the peak in activity. As the months advance, there is a noticeable trend of reduced posting activity, culminating in the lowest post counts in December. The pattern also reflects a common online behavior trend, where Saturdays and Sundays experience less posting activity compared to the busier weekdays. -->
+<center>
+<figure class="figure">
+<iframe src="https://anthonymoubarak.georgetown.domains/Calendar-Heatmaps/Socialism/dist/index.html" width="800px" height="500px">
+</iframe>
+<figcaption class="figure-caption">
+Appendix 5: Calendar Heatmap of <code>r/socialism</code> Reddit Posts
+</figcaption>
+</figure>
+</center>
+<!--
+Figure 9 presents the daily and monthly number of posts on a subreddit related to `r/socialism`. The heatmap shows a consistent pattern where weekdays have higher post counts, with Thursdays typically being the most active. The beginning of the year, especially January, has higher activity which appears to gradually decrease throughout the year, with December having some of the lowest numbers. The trend also follows the usual weekly cycle of online interactions, with Saturdays and Sundays having the least number of posts compared to weekdays, a common characteristic of user engagement in online communities. -->
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./business_goals.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Business Goals</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./nlp.html" class="pagination-link">
+        <span class="nav-page-text">NLP</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Content 2023 by Project Team 1 <br> All content licensed under a <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0)</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">Made with <a href="https://quarto.org/">Quarto</a><br></div>
+  </div>
+</footer>
+
+
+
+</body></html>

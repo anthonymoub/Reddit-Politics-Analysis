@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Index</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Center the iframes in the container */
+        align-items: stretch;
+      }
+      .flex-container > iframe {
+        flex: 0 0 calc(50% - 10px); /* Adjust the flex-basis as well */
+        border: none;
+        margin: 5px; /* Reduced margin to decrease space between iframes */
+        width: calc(
+          50% - 300px
+        ); /* Adjusted width to account for reduced margin */
+        height: calc(50vh - 20px); /* Adjusted height as well */
+      }
+      @media (max-width: 800px) {
+        .flex-container > iframe {
+          flex: 0 0 calc(100% - 10px); /* Full width with reduced margin on smaller screens */
+          width: calc(100% - 10px);
+          height: calc(50vh - 10px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex-container">
+      <iframe src="Conservative/dist/index.html" title="Conservative"></iframe>
+      <iframe src="Centrist/dist/index.html" title="Centrist"></iframe>
+      <iframe src="Liberterian/dist/index.html" title="Libertarian"></iframe>
+      <iframe src="Socialism/dist/index.html" title="Socialism"></iframe>
+    </div>
+  </body>
+</html>
