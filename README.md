@@ -1,4 +1,4 @@
-# DSAN 6000 Project
+# Big Data Reddit Project
 
 The primary objective of this project is to leverage the capabilities of AWS and Azure to analyze millions of Reddit posts pertaining to politics. This endeavor encompasses the entire data science project lifecycle, including data cleaning, exploratory data analysis (EDA), and machine learning (ML), with PySpark being the principal library utilized.
 
